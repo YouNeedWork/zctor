@@ -2,14 +2,16 @@ const std = @import("std");
 const typ = std.builtin.Type;
 const xev = @import("xev");
 
-pub const Ctx = struct {
+pub const Context = struct {
     loop: *xev.Loop,
+    thread_id: i32,
     const Self = @This();
 
-    pub fn init(allocator: std.mem.Allocator, loop: *xev.Loop) !*Self {
+    pub fn init(allocator: std.mem.Allocator, loop: *xev.Loop, therad_id: i32) !*Self {
         const ctx = try allocator.create(Self);
         ctx.* = .{
             .loop = loop,
+            .thread_id = therad_id,
         };
 
         return ctx;
@@ -23,13 +25,14 @@ pub const Ctx = struct {
 pub fn Actor(comptime T: anytype) type {
     return struct {
         mailbox: std.fifo.LinearFifo(T, .{ .Static = 100 }),
-        ctx: *Ctx,
+        ctx: *Context,
         event: xev.Async,
         completion: xev.Completion,
+        handler: *const fn (*Actor(T), T) ?void,
 
         const Self = @This();
 
-        pub fn init(allocator: std.mem.Allocator, ctx: *Ctx) !*Self {
+        pub fn init(allocator: std.mem.Allocator, ctx: *Context, f: fn (*Actor(T), T) ?void) !*Self {
             const self = try allocator.create(Self);
 
             self.* = .{
@@ -40,6 +43,7 @@ pub fn Actor(comptime T: anytype) type {
                 .ctx = ctx,
                 .completion = undefined,
                 .event = try xev.Async.init(),
+                .handler = f,
             };
 
             return self;
@@ -56,13 +60,8 @@ pub fn Actor(comptime T: anytype) type {
             _ = r catch unreachable;
 
             const self: *Self = ud.?;
-
-            std.debug.print("Actor callback executed, mailbox size: {}\n", .{self.mailbox.count});
-
-            // Process messages in the mailbox
-            while (self.mailbox.count > 0) {
-                const msg: i32 = self.mailbox.readItem().?;
-                std.debug.print("Processing message: {}\n", .{msg});
+            while (self.mailbox.readItem()) |msg| {
+                self.handler(self, msg) orelse break;
             }
 
             return .rearm; // Rearm to receive more notifications
@@ -83,10 +82,15 @@ pub fn Actor(comptime T: anytype) type {
         }
 
         pub fn sender(self: *Self, msg: T) !void {
-            //TODO: cap checking
             try self.mailbox.writeItem(msg);
             try self.event.notify();
         }
+
+        // TOOD: this can do it by call().wait.? whici mean can wait result with LockFree?
+        //pub fn call(self: *Self, msg: T) !*anyopaque {
+        //    try self.mailbox.writeItem(msg);
+        //    try self.event.notify();
+        //}
 
         pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
             self.mailbox.deinit();
@@ -97,51 +101,81 @@ pub fn Actor(comptime T: anytype) type {
 
 const ActorThread = struct {
     loop: xev.Loop,
-    ctx: *Ctx,
-    actors: std.ArrayList(ActorInterface),
+    ctx: *Context,
+    actors: std.StringArrayHashMap(ActorInterface),
 
     const Self = @This();
 
-    pub fn init(allocator: std.mem.Allocator) !*Self {
+    pub fn init(allocator: std.mem.Allocator, thread_id: i32) !*Self {
         const self = try allocator.create(Self);
         self.loop = try xev.Loop.init(.{});
-        self.ctx = try Ctx.init(allocator, &self.loop);
-        self.actors = std.ArrayList(ActorInterface).init(allocator);
+        self.ctx = try Context.init(allocator, &self.loop, thread_id);
+        self.actors = std.StringArrayHashMap(ActorInterface).init(allocator);
 
         return self;
     }
 
-    pub fn regiestActor(self: *Self, actor: anytype) !void {
-        //TODO: init in threads so we need to deinit all
-        try self.actors.append(ActorInterface.init(actor));
+    pub fn registerActor(self: *Self, actor: anytype) !void {
+        const name = comptime @typeName(@TypeOf(actor.*));
+        try self.actors.put(name, ActorInterface.init(actor));
     }
 
-    pub fn sender(self: *Self, T: type, msg_ptr: *anyopaque) void {
+    pub fn sender(self: *Self, comptime T: type, msg: *T) !void {
+        const name = comptime @typeName(Actor(T));
+        if (self.actors.get(name)) |actor| {
+            actor.handleRawMessage(msg);
+        } else {
+            return error.ActorNotFound;
+        }
+    }
+
+    pub fn boradcase(self: *Self, T: type, msg_ptr: *anyopaque) void {
         _ = T;
+
         for (self.actors.items) |actor| {
             actor.sender(msg_ptr);
         }
     }
 
     pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
-        for (self.actors.items) |actor| {
-            actor.deinit(allocator);
+        var iter = self.actors.iterator();
+        while (iter.next()) |entry| {
+            entry.value_ptr.deinit(allocator);
         }
 
         self.actors.deinit();
+
         self.ctx.deinit(allocator);
         self.loop.deinit();
         allocator.destroy(self);
     }
 
     pub fn run(self: *Self) !void {
-        for (self.actors.items) |actor| {
-            actor.run();
+        var iter = self.actors.iterator();
+        while (iter.next()) |entry| {
+            entry.value_ptr.run();
         }
     }
 
     pub fn start_loop(self: *Self) !void {
         try self.loop.run(.until_done);
+    }
+};
+
+pub const FirstMessage = union(enum) {
+    Hello: []const u8,
+    Goodbye: void,
+    Ping: u32,
+
+    pub fn handle(self: *Actor(FirstMessage), msg: @This()) ?void {
+        _ = self;
+
+        switch (msg) {
+            .Hello => |name| std.debug.print("Got Hello: {s}\n", .{name}),
+            .Goodbye => std.debug.print("Got Goodbye\n", .{}),
+            .Ping => |num| std.debug.print("Got Ping: {}\n", .{num}),
+        }
+        return null;
     }
 };
 
@@ -180,19 +214,31 @@ const ActorEngine = struct {
     }
 
     fn thread_run(self: *Self, idx: usize) !void {
-        // Init ActorThread
-        const actor_thread = ActorThread.init(self.allocator) catch {
+        // Init ActorThread}
+        const actor_thread = ActorThread.init(self.allocator, @intCast(idx)) catch {
             std.debug.print("failed to init actor thread {}\n", .{idx});
             return;
         };
 
         self.actor_threads[idx] = actor_thread;
-        try actor_thread.regiestActor(try Actor(i32).init(self.allocator, actor_thread.ctx));
+
+        try actor_thread.registerActor(try Actor(i32).init(self.allocator, actor_thread.ctx, struct {
+            pub fn handle(s: *Actor(i32), msg: i32) ?void {
+                std.debug.print("Thread Id: {} Got i32: {}\n", .{ s.ctx.thread_id, msg });
+            }
+        }.handle));
+
+        try actor_thread.registerActor(try Actor(FirstMessage).init(self.allocator, actor_thread.ctx, FirstMessage.handle));
         try actor_thread.run();
 
         var p: i32 = 10000;
-        actor_thread.sender(Actor(i32), &p);
-        actor_thread.sender(Actor(i32), &p);
+
+        try actor_thread.sender(i32, &p);
+        try actor_thread.sender(i32, &p);
+        var s: FirstMessage = .{ .Ping = 0 };
+
+        try actor_thread.sender(FirstMessage, &s);
+
         try actor_thread.start_loop();
 
         actor_thread.deinit(self.allocator);

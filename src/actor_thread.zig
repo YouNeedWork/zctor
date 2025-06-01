@@ -24,16 +24,16 @@ pub fn registerActor(self: *Self, actor: anytype) !void {
     try self.actors.put(name, ActorInterface.init(actor));
 }
 
-pub fn sender(self: *Self, comptime T: type, msg: *T) !void {
+pub fn send(self: *Self, comptime T: type, msg_ptr: *T) !void {
     const name = comptime @typeName(Actor.Actor(T));
     if (self.actors.get(name)) |act| {
-        act.handleRawMessage(msg);
+        act.handleRawMessage(msg_ptr);
     } else {
         return error.ActorNotFound;
     }
 }
 
-pub fn boradcase(self: *Self, T: type, msg_ptr: *anyopaque) void {
+pub fn publish(self: *Self, comptime T: type, msg_ptr: *anyopaque) void {
     _ = T;
 
     for (self.actors.items) |act| {

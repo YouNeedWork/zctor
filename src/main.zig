@@ -1,38 +1,19 @@
 const std = @import("std");
-const typ = std.builtin.Type;
 const xev = @import("xev");
-
-pub const Context = struct {
-    loop: *xev.Loop,
-    thread_id: i32,
-    const Self = @This();
-
-    pub fn init(allocator: std.mem.Allocator, loop: *xev.Loop, therad_id: i32) !*Self {
-        const ctx = try allocator.create(Self);
-        ctx.* = .{
-            .loop = loop,
-            .thread_id = therad_id,
-        };
-
-        return ctx;
-    }
-
-    pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
-        allocator.destroy(self);
-    }
-};
+const builtin = @import("builtin");
+const context = @import("context.zig");
 
 pub fn Actor(comptime T: anytype) type {
     return struct {
         mailbox: std.fifo.LinearFifo(T, .{ .Static = 100 }),
-        ctx: *Context,
+        ctx: *context,
         event: xev.Async,
         completion: xev.Completion,
         handler: *const fn (*Actor(T), T) ?void,
 
         const Self = @This();
 
-        pub fn init(allocator: std.mem.Allocator, ctx: *Context, f: fn (*Actor(T), T) ?void) !*Self {
+        pub fn init(allocator: std.mem.Allocator, ctx: *context, f: fn (*Actor(T), T) ?void) !*Self {
             const self = try allocator.create(Self);
 
             self.* = .{
@@ -86,12 +67,6 @@ pub fn Actor(comptime T: anytype) type {
             try self.event.notify();
         }
 
-        // TOOD: this can do it by call().wait.? whici mean can wait result with LockFree?
-        //pub fn call(self: *Self, msg: T) !*anyopaque {
-        //    try self.mailbox.writeItem(msg);
-        //    try self.event.notify();
-        //}
-
         pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
             self.mailbox.deinit();
             allocator.destroy(self);
@@ -101,7 +76,7 @@ pub fn Actor(comptime T: anytype) type {
 
 const ActorThread = struct {
     loop: xev.Loop,
-    ctx: *Context,
+    ctx: *context,
     actors: std.StringArrayHashMap(ActorInterface),
 
     const Self = @This();
@@ -109,7 +84,7 @@ const ActorThread = struct {
     pub fn init(allocator: std.mem.Allocator, thread_id: i32) !*Self {
         const self = try allocator.create(Self);
         self.loop = try xev.Loop.init(.{});
-        self.ctx = try Context.init(allocator, &self.loop, thread_id);
+        self.ctx = try context.init(allocator, &self.loop, thread_id);
         self.actors = std.StringArrayHashMap(ActorInterface).init(allocator);
 
         return self;
@@ -184,15 +159,19 @@ const ActorEngine = struct {
     actor_threads: [128]*ActorThread,
     wg: std.Thread.WaitGroup,
     threads: usize,
+    thread_idx: usize,
 
     const Self = @This();
 
     pub fn init(allocator: std.mem.Allocator) !*Self {
         const self = try allocator.create(Self);
         self.allocator = allocator;
-        self.wg.reset();
-        self.threads = 0;
 
+        const cpu_count = try std.Thread.getCpuCount();
+        self.threads = cpu_count;
+        self.thread_idx = 0; //The global actor running on zero Thread idx
+
+        self.wg.reset();
         return self;
     }
 
@@ -200,21 +179,48 @@ const ActorEngine = struct {
         self.allocator.destroy(self);
     }
 
-    pub fn run(self: *Self) !void {
-        const cpu_count = try std.Thread.getCpuCount();
-        self.threads = cpu_count;
-        self.wg.startMany(cpu_count);
+    pub fn start(self: *Self, thread_count: u32) void {
+        self.threads = thread_count;
 
-        for (0..cpu_count) |i| {
-            const t = try std.Thread.spawn(.{}, thread_run, .{ self, i });
-            t.detach();
-        }
+        // self.wg.startMany(cpu_count);
+        //
+        //for (0..cpu_count) |i| {
+        //     const t = try std.Thread.spawn(.{}, thread_run, .{ self, i });
+        //     t.detach();
+        // }
 
         self.wg.wait();
     }
 
-    fn thread_run(self: *Self, idx: usize) !void {
-        // Init ActorThread}
+    pub fn stop(self: *Self) void {
+        for (0..self.threads) |i| {
+            self.actor_threads[i].stop();
+            self.wg.finish();
+        }
+    }
+
+    // 等待所有线程完成
+    pub fn wait(self: *Self) void {
+        self.wg.wait();
+    }
+
+    pub fn spawn(self: *Self) !void {
+        const actor_thread = ActorThread.init(self.allocator, @intCast(self.thread_idx)) catch |err| {
+            std.debug.print("failed to init actor thread {} with error: {} \n", .{ self.thread_idx, err });
+            return err;
+        };
+
+        self.actor_threads[self.thread_idx] = actor_thread;
+        self.thread_idx += 1;
+
+        //TODO: lack of finish() call when the thread exit()
+        try actor_thread.registerActor(try Actor(FirstMessage).init(self.allocator, actor_thread.ctx, FirstMessage.handle));
+        try actor_thread.run();
+
+        self.wg.start();
+    }
+
+    pub fn spawn_each_thread(self: *Self, idx: usize) !void {
         const actor_thread = ActorThread.init(self.allocator, @intCast(idx)) catch {
             std.debug.print("failed to init actor thread {}\n", .{idx});
             return;
@@ -247,30 +253,23 @@ const ActorEngine = struct {
 };
 
 pub const ActorInterface = struct {
-    ptr: *anyopaque, // 指向实际 Actor 实例的指针
-    vtable: *const VTable, // 指向虚拟函数表的指针
+    ptr: *anyopaque,
+    vtable: *const VTable,
 
     const Self = @This();
 
-    // 虚拟函数表定义
     pub const VTable = struct {
         run: *const fn (ptr: *anyopaque) void,
         deinit: *const fn (ptr: *anyopaque, allocator: std.mem.Allocator) void,
-        sender: *const fn (ptr: *anyopaque, msg: *anyopaque) void,
         handleRawMessage: *const fn (ptr: *anyopaque, msg_ptr: *anyopaque) void,
     };
 
-    // 方便使用的包装方法
     pub fn run(self: Self) void {
         return self.vtable.run(self.ptr);
     }
 
     pub fn deinit(self: Self, allocator: std.mem.Allocator) void {
         return self.vtable.deinit(self.ptr, allocator);
-    }
-
-    pub fn sender(self: Self, msg: *anyopaque) void {
-        return self.vtable.sender(self.ptr, msg);
     }
 
     pub fn handleRawMessage(self: Self, msg: *anyopaque) void {
@@ -301,15 +300,6 @@ pub const ActorInterface = struct {
                 }
             }.function;
 
-            const senderFn = struct {
-                fn function(ptr: *anyopaque, msg_ptr: *anyopaque) void {
-                    const self: T = @ptrCast(@alignCast(ptr));
-                    self.handleRawMessage(msg_ptr) catch {
-                        std.debug.print("failed to process message", .{});
-                    };
-                }
-            }.function;
-
             const handleRawMessageFn = struct {
                 fn function(ptr: *anyopaque, msg_ptr: *anyopaque) void {
                     const self: T = @ptrCast(@alignCast(ptr));
@@ -322,7 +312,6 @@ pub const ActorInterface = struct {
             break :blk &VTable{
                 .run = runFn,
                 .deinit = deinitFn,
-                .sender = senderFn,
                 .handleRawMessage = handleRawMessageFn,
             };
         };
@@ -334,12 +323,23 @@ pub const ActorInterface = struct {
     }
 };
 
-pub fn main() !void {
-    var gpa: std.heap.GeneralPurposeAllocator(.{}) = .init;
-    defer _ = gpa.deinit();
-    const allocator = gpa.allocator();
+var debug_allocator: std.heap.DebugAllocator(.{}) = .init;
 
-    var engine = try ActorEngine.init(allocator);
-    try engine.run();
-    engine.deinit();
+pub fn main() !void {
+    const gpa, const is_debug = gpa: {
+        break :gpa switch (builtin.mode) {
+            .Debug, .ReleaseSafe => .{ debug_allocator.allocator(), true },
+            .ReleaseFast, .ReleaseSmall => .{ std.heap.smp_allocator, false },
+        };
+    };
+    defer if (is_debug) {
+        _ = debug_allocator.deinit();
+    };
+
+    var engine = try ActorEngine.init(gpa);
+    defer engine.deinit();
+
+    try engine.spawn();
+
+    engine.start(12);
 }

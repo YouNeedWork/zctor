@@ -11,6 +11,7 @@ pub const VTable = struct {
     run: *const fn (ptr: *anyopaque) void,
     deinit: *const fn (ptr: *anyopaque, allocator: std.mem.Allocator) void,
     handleRawMessage: *const fn (ptr: *anyopaque, msg_ptr: *anyopaque) void,
+    sender: *const fn (ptr: *anyopaque, msg_ptr: *anyopaque) anyerror!void,
 };
 
 pub fn run(self: Self) void {
@@ -23,6 +24,10 @@ pub fn deinit(self: Self, allocator: std.mem.Allocator) void {
 
 pub fn handleRawMessage(self: Self, msg: *anyopaque) void {
     return self.vtable.handleRawMessage(self.ptr, msg);
+}
+
+pub fn sender(self: Self, msg_ptr: *anyopaque) !void {
+    return self.vtable.sender(self.ptr, msg_ptr);
 }
 
 pub fn init(actor: anytype) Self {
@@ -57,10 +62,18 @@ pub fn init(actor: anytype) Self {
             }
         }.function;
 
+        const senderFn = struct {
+            fn function(ptr: *anyopaque, msg_ptr: *anyopaque) anyerror!void {
+                const self: T = @ptrCast(@alignCast(ptr));
+                return self.handleRawMessage(msg_ptr);
+            }
+        }.function;
+
         break :blk &VTable{
             .run = runFn,
             .deinit = deinitFn,
             .handleRawMessage = handleRawMessageFn,
+            .sender = senderFn,
         };
     };
 

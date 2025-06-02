@@ -80,6 +80,12 @@ pub fn spawn_each_thread(self: *Self, idx: usize) !void {
     self.wg.finish();
 }
 
-pub fn send(_: *Self, msg: *anyopaque) !void {
-    _ = msg;
+pub fn send(self: *Self, comptime T: type, msg_ptr: *T) !void {
+    // For now, route to the first actor thread (thread 0)
+    // In a more sophisticated implementation, this could use load balancing
+    if (self.thread_idx > 0) {
+        try self.actor_threads[0].send(T, msg_ptr);
+    } else {
+        return error.NoActorsSpawned;
+    }
 }

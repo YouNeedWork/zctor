@@ -81,11 +81,18 @@ pub fn spawn_each_thread(self: *Self, idx: usize) !void {
 }
 
 pub fn send(self: *Self, comptime T: type, msg_ptr: *T) !void {
-    // For now, route to the first actor thread (thread 0)
-    // In a more sophisticated implementation, this could use load balancing
-    if (self.thread_idx > 0) {
-        try self.actor_threads[0].send(T, msg_ptr);
-    } else {
+    if (self.thread_idx == 0) {
         return error.NoActorsSpawned;
     }
+    
+    // Use simple round-robin routing across available actor threads
+    // Hash the message type to get a consistent thread assignment
+    const type_name = @typeName(T);
+    var hash: u32 = 0;
+    for (type_name) |c| {
+        hash = hash *% 31 +% c;
+    }
+    const thread_id = hash % self.thread_idx;
+    
+    try self.actor_threads[thread_id].send(T, msg_ptr);
 }

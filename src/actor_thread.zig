@@ -37,9 +37,7 @@ pub fn publish(self: *Self, comptime T: type, msg_ptr: *anyopaque) void {
     _ = T;
 
     for (self.actors.items) |act| {
-        act.sender(msg_ptr) catch {
-            std.debug.print("failed to send message in publish", .{});
-        };
+        act.handleRawMessage(msg_ptr);
     }
 }
 

@@ -27,6 +27,8 @@ pub fn registerActor(self: *Self, actor: anytype) !void {
 pub fn send(self: *Self, comptime T: type, msg_ptr: *T) !void {
     const name = comptime @typeName(Actor.Actor(T));
     if (self.actors.get(name)) |act| {
+        std.debug.print("handle raw message: {} \n", .{T});
+
         act.handleRawMessage(msg_ptr);
     } else {
         return error.ActorNotFound;

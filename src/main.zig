@@ -50,6 +50,7 @@ pub fn main() !void {
     defer engine.deinit();
     try engine.spawn(FirstMessage, FirstMessage.handle);
     var first_message = FirstMessage{ .Ping = 10 };
-    try engine.send(&first_message);
+    try engine.send(FirstMessage, &first_message);
+
     engine.start();
 }

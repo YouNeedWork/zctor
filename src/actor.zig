@@ -2,49 +2,49 @@ const std = @import("std");
 const context = @import("context.zig");
 const xev = @import("xev");
 
-pub fn Actor(comptime T: anytype) type {
+pub fn Actor(comptime T: type) type {
     return struct {
-        mailbox: std.fifo.LinearFifo(T, .{ .Static = 100 }),
+        const Self = @This();
+
+        handler: *const fn (*Self, T) ?void, // Changed return type to ?T
+        mailbox: std.fifo.LinearFifo(T, .Dynamic),
         ctx: *context,
         event: xev.Async,
         completion: xev.Completion,
-        handler: *const fn (*Actor(T), T) ?void,
+        allocator: std.mem.Allocator,
+        current_state: ?*anyopaque = null, // Store current state
 
-        const Self = @This();
-
-        pub fn init(allocator: std.mem.Allocator, ctx: *context, f: fn (*Actor(T), T) ?void) !*Self {
+        pub fn init(allocator: std.mem.Allocator, ctx: *context, handler: *const fn (*Self, T) ?void) !*Self {
             const self = try allocator.create(Self);
-
-            self.* = .{
-                .mailbox = std.fifo.LinearFifo(
-                    T,
-                    .{ .Static = 100 },
-                ).init(),
+            self.* = Self{
+                .handler = handler,
+                .mailbox = std.fifo.LinearFifo(T, .Dynamic).init(allocator),
                 .ctx = ctx,
-                .completion = undefined,
                 .event = try xev.Async.init(),
-                .handler = f,
+                .completion = undefined,
+                .allocator = allocator,
             };
-
             return self;
         }
 
         fn actorCallback(
-            ud: ?*Self,
-            l: *xev.Loop,
-            c: *xev.Completion,
-            r: xev.Async.WaitError!void,
+            userdata: ?*Self,
+            loop: *xev.Loop,
+            completion: *xev.Completion,
+            result: xev.Async.WaitError!void,
         ) xev.CallbackAction {
-            _ = l;
-            _ = c;
-            _ = r catch unreachable;
+            _ = result catch {};
+            _ = loop;
+            _ = completion;
 
-            const self: *Self = ud.?;
+            //const self: *Self = @ptrCast(@alignCast(userdata.?));
+            const self = userdata.?; // Use the non-nullable version
+
             while (self.mailbox.readItem()) |msg| {
-                self.handler(self, msg) orelse break;
+                // Handle the message and get updated state
+                _ = self.handler(self, msg);
             }
-
-            return .rearm; // Rearm to receive more notifications
+            return .rearm;
         }
 
         pub fn run(self: *Self) void {
@@ -68,6 +68,26 @@ pub fn Actor(comptime T: anytype) type {
         pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
             self.mailbox.deinit();
             allocator.destroy(self);
+        }
+
+        pub fn getState(self: *Self, comptime S: anytype) ?*S {
+            return @ptrCast(@alignCast(self.current_state));
+        }
+
+        pub fn setState(self: *Self, state: *anyopaque) void {
+            self.current_state = state;
+        }
+
+        pub fn resetState(self: *Self) void {
+            self.current_state = null;
+        }
+
+        pub fn getContext(self: *Self) *context {
+            return self.ctx;
+        }
+
+        pub fn getAllocator(self: *Self) std.mem.Allocator {
+            return self.allocator;
         }
     };
 }

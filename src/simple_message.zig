@@ -92,6 +92,10 @@ pub const SimpleMessage = union(enum) {
                 state.count += 1;
                 state.total_pings += 1;
                 std.debug.print("Got Ping: {} (count: {}, total_pings: {})\n", .{ num, state.count, state.total_pings });
+                var msg_ = SimpleMessage.ping_req(num + 1);
+                self.ctx.send(SimpleMessage, &msg_) catch |e| {
+                    std.debug.print("SimpleMessage Send failed {}", .{e});
+                };
             },
             .GetCount => {
                 std.debug.print("Current count: {}, hellos: {}, pings: {}, goodbyes: {}\n", .{ state.count, state.total_hellos, state.total_pings, state.total_goodbyes });
@@ -101,6 +105,9 @@ pub const SimpleMessage = union(enum) {
                 state.total_pings = 0;
                 state.total_hellos = 0;
                 state.total_goodbyes = 0;
+                self.sender(SimpleMessage.ping_req(100)) catch |e| {
+                    std.debug.print("{}", .{e});
+                };
                 std.debug.print("State reset\n", .{});
             },
         }

@@ -2,6 +2,7 @@ const std = @import("std");
 const context = @import("context.zig");
 const xev = @import("xev");
 const ActorInterface = @import("actor_interface.zig");
+const ActorEngine = @import("actor_engine.zig");
 const Actor = @import("actor.zig");
 
 loop: xev.Loop,
@@ -10,10 +11,10 @@ actors: std.StringArrayHashMap(ActorInterface),
 
 const Self = @This();
 
-pub fn init(allocator: std.mem.Allocator, thread_id: i32) !*Self {
+pub fn init(allocator: std.mem.Allocator, actor_engine: *ActorEngine, thread_id: i32) !*Self {
     const self = try allocator.create(Self);
     self.loop = try xev.Loop.init(.{});
-    self.ctx = try context.init(allocator, &self.loop, thread_id);
+    self.ctx = try context.init(allocator, &self.loop, actor_engine, thread_id);
     self.actors = std.StringArrayHashMap(ActorInterface).init(allocator);
 
     return self;
@@ -27,8 +28,6 @@ pub fn registerActor(self: *Self, actor: anytype) !void {
 pub fn send(self: *Self, comptime T: type, msg_ptr: *T) !void {
     const name = comptime @typeName(Actor.Actor(T));
     if (self.actors.get(name)) |act| {
-        std.debug.print("handle raw message: {} \n", .{T});
-
         act.handleRawMessage(msg_ptr);
     } else {
         return error.ActorNotFound;

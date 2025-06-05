@@ -57,7 +57,7 @@ pub fn spawn(self: *Self, comptime T: anytype, handle: fn (*Actor.Actor(T), T) ?
         return error.TooManyThreads;
     }
 
-    const actor_thread = ActorThread.init(self.allocator, @intCast(self.thread_idx)) catch |err| {
+    const actor_thread = ActorThread.init(self.allocator, self, @intCast(self.thread_idx)) catch |err| {
         std.debug.print("failed to init actor thread {} with error: {} \n", .{ self.thread_idx, err });
         return err;
     };
@@ -93,8 +93,6 @@ fn thread_run(self: *Self, thread_idx: usize) void {
 }
 
 pub fn send(self: *Self, comptime T: anytype, msg_ptr: *anyopaque) !void {
-    std.debug.print("typeof: {}\n", .{T});
-
     const typed_ptr: *T = @ptrCast(@alignCast(msg_ptr));
     try self.actor_threads[0].send(T, typed_ptr);
 }

@@ -7,7 +7,7 @@ const ActorThread = @import("actor_thread.zig");
 const ActorInterface = @import("actor_interface.zig");
 const ActorEngine = @import("actor_engine.zig");
 
-pub const FirstMessage = union(enum) {
+pub const SimpleMessage = union(enum) {
     Hello: []const u8,
     Goodbye: void,
     Ping: u32,
@@ -40,33 +40,33 @@ pub const FirstMessage = union(enum) {
 
     // Initialize with default state
     // Initialize with default state
-    pub fn init(allocator: std.mem.Allocator) FirstMessage {
+    pub fn init(allocator: std.mem.Allocator) SimpleMessage {
         _ = allocator;
-        return FirstMessage.GetCount;
+        return SimpleMessage.GetCount;
     }
 
     // Convenience constructors
-    pub fn hello_req(name: []const u8) FirstMessage {
-        return FirstMessage{ .Hello = name };
+    pub fn hello_req(name: []const u8) SimpleMessage {
+        return SimpleMessage{ .Hello = name };
     }
 
-    pub fn goodbye_req() FirstMessage {
-        return FirstMessage.Goodbye;
+    pub fn goodbye_req() SimpleMessage {
+        return SimpleMessage.Goodbye;
     }
 
-    pub fn ping_req(value: u32) FirstMessage {
-        return FirstMessage{ .Ping = value };
+    pub fn ping_req(value: u32) SimpleMessage {
+        return SimpleMessage{ .Ping = value };
     }
 
-    pub fn getCount_req() FirstMessage {
-        return FirstMessage.GetCount;
+    pub fn getCount_req() SimpleMessage {
+        return SimpleMessage.GetCount;
     }
 
-    pub fn reset_req() FirstMessage {
-        return FirstMessage.Reset;
+    pub fn reset_req() SimpleMessage {
+        return SimpleMessage.Reset;
     }
 
-    pub fn handle(self: *Actor(Self), msg: FirstMessage) ?void {
+    pub fn handle(self: *Actor(Self), msg: SimpleMessage) ?void {
         // Get or initialize state
         var state = self.getState(State) orelse blk: {
             const new_state = State.init(self.allocator) catch |err| {

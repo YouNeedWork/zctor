@@ -6,7 +6,7 @@ const Actor = @import("actor.zig");
 const ActorThread = @import("actor_thread.zig");
 const ActorInterface = @import("actor_interface.zig");
 const ActorEngine = @import("actor_engine.zig");
-const FirstMessage = @import("simple_message.zig").FirstMessage;
+const SimpleMessage = @import("simple_message.zig").SimpleMessage;
 
 var debug_allocator: std.heap.DebugAllocator(.{}) = .init;
 
@@ -23,22 +23,22 @@ pub fn main() !void {
 
     var engine = try ActorEngine.init(allocator);
     defer engine.deinit();
-    try engine.spawn(FirstMessage, FirstMessage.handle);
+    try engine.spawn(SimpleMessage, SimpleMessage.handle);
 
-    var hello_msg = FirstMessage.hello_req("World");
-    try engine.send(FirstMessage, &hello_msg);
+    var hello_msg = SimpleMessage.hello_req("World");
+    try engine.send(SimpleMessage, &hello_msg);
 
-    var status_msg = FirstMessage.ping_req(1);
-    try engine.send(FirstMessage, &status_msg);
+    var status_msg = SimpleMessage.ping_req(1);
+    try engine.send(SimpleMessage, &status_msg);
 
-    var status_msg1 = FirstMessage.ping_req(2);
-    try engine.send(FirstMessage, &status_msg1);
+    var status_msg1 = SimpleMessage.ping_req(2);
+    try engine.send(SimpleMessage, &status_msg1);
 
-    var status_msg2 = FirstMessage.ping_req(3);
-    try engine.send(FirstMessage, &status_msg2);
+    var status_msg2 = SimpleMessage.ping_req(3);
+    try engine.send(SimpleMessage, &status_msg2);
 
-    var reset_msg = FirstMessage.reset_req();
-    try engine.send(FirstMessage, &reset_msg);
+    var reset_msg = SimpleMessage.reset_req();
+    try engine.send(SimpleMessage, &reset_msg);
 
     engine.start();
 }

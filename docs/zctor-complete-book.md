@@ -2,7 +2,7 @@
 
 A comprehensive guide to the zctor actor framework for Zig.
 
-*Generated on 2025-06-05 14:19:20*
+*Generated on 2025-06-05 14:22:14*
 
 ---
 

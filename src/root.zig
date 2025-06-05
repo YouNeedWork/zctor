@@ -1,13 +1,32 @@
-//! By convention, root.zig is the root source file when making a library. If
-//! you are making an executable, the convention is to delete this file and
-//! start with main.zig instead.
+//! zctor - A lightweight actor framework for Zig
+//!
+//! This library provides an implementation of the Actor Model with:
+//! - Actor-based concurrency
+//! - Multi-threaded execution
+//! - Asynchronous message passing
+//! - Built-in state management
+
 const std = @import("std");
+
+// Export the main actor framework components
+pub const Actor = @import("actor.zig").Actor;
+pub const ActorEngine = @import("actor_engine.zig");
+pub const ActorThread = @import("actor_thread.zig");
+pub const ActorInterface = @import("actor_interface.zig");
+pub const Context = @import("context.zig");
+
+// Export the example message type for reference
+pub const SimpleMessage = @import("simple_message.zig").SimpleMessage;
+
+// For testing
 const testing = std.testing;
 
-pub export fn add(a: i32, b: i32) i32 {
-    return a + b;
-}
-
-test "basic add functionality" {
-    try testing.expect(add(3, 7) == 10);
+test "library imports" {
+    // Ensure all modules can be imported
+    _ = Actor;
+    _ = ActorEngine;
+    _ = ActorThread;
+    _ = ActorInterface;
+    _ = Context;
+    _ = SimpleMessage;
 }

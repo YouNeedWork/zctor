@@ -1,2 +1,5 @@
 .zig-cache/
 zig-out/
+
+# Generated HTML documentation (built by CI)
+docs/index.html

@@ -2,6 +2,8 @@
 
 A lightweight, high-performance actor framework for Zig, providing concurrent message-passing with asynchronous event handling.
 
+📖 **[View Complete Documentation](https://youneedwork.github.io/zctor/)** - Comprehensive documentation website with examples, API reference, and guides.
+
 ## Overview
 
 zctor is a Zig implementation of the Actor Model, offering a robust foundation for building concurrent applications. The framework leverages libxev for efficient event loop management and provides a clean API for actor creation, message passing, and state management.
@@ -14,6 +16,16 @@ zctor is a Zig implementation of the Actor Model, offering a robust foundation f
 - **State Management**: Built-in state management within actors with type safety
 - **Memory Safe**: Leverages Zig's memory safety guarantees
 - **Minimal Dependencies**: Only depends on libxev for event handling
+
+## Documentation
+
+📚 **[Complete Documentation Website](https://youneedwork.github.io/zctor/)** - Visit our comprehensive documentation site for:
+
+- **[Quick Start Guide](https://youneedwork.github.io/zctor/#quick-start)** - Get up and running in minutes
+- **[API Reference](https://youneedwork.github.io/zctor/#api-reference)** - Complete API documentation  
+- **[Examples](https://youneedwork.github.io/zctor/#examples)** - Real-world usage examples
+- **[Best Practices](https://youneedwork.github.io/zctor/#best-practices)** - Optimization tips and patterns
+- **[Advanced Topics](https://youneedwork.github.io/zctor/#advanced-topics)** - Complex patterns and customization
 
 ## Requirements
 
@@ -230,12 +242,17 @@ zig build run
 
 ## Contributing
 
+Contributions are welcome! Please see our [comprehensive contributing guide](https://youneedwork.github.io/zctor/#contributing) for detailed information.
+
+**Quick steps:**
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
 4. Add tests for new functionality
 5. Ensure all tests pass
 6. Submit a pull request
+
+The documentation website is automatically generated and deployed via GitHub Actions whenever changes are pushed to the main branch.
 
 ## License
 

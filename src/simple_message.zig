@@ -1,124 +1,108 @@
 const std = @import("std");
-const Actor = @import("actor.zig");
+const xev = @import("xev");
+const builtin = @import("builtin");
+const context = @import("context.zig");
+const Actor = @import("actor.zig").Actor;
+const ActorThread = @import("actor_thread.zig");
+const ActorInterface = @import("actor_interface.zig");
+const ActorEngine = @import("actor_engine.zig");
 
-pub const SimpleMessage = struct {
-    // State fields
-    count: u32 = 0,
-    total_operations: u32 = 0,
-    value: i32 = 0,
-    allocator: std.mem.Allocator,
+pub const FirstMessage = union(enum) {
+    Hello: []const u8,
+    Goodbye: void,
+    Ping: u32,
+    GetCount: void,
+    Reset: void,
 
-    // Command fields
-    action: Action,
-    parameter: i32 = 0,
-    text: ?[]const u8 = null,
+    const Self = @This();
+    // State stored directly in the struct
+    const State = struct {
+        count: u32 = 0,
+        total_pings: u32 = 0,
+        total_hellos: u32 = 0,
+        total_goodbyes: u32 = 0,
+        allocator: std.mem.Allocator,
 
-    const Action = enum {
-        Increment,
-        Decrement,
-        SetValue,
-        AddValue,
-        PrintStatus,
-        Reset,
-        SayHello,
+        pub fn init(allocator: std.mem.Allocator) !*State {
+            const s = try allocator.create(State);
+
+            s.* = State{
+                .count = 0,
+                .total_pings = 0,
+                .total_hellos = 0,
+                .total_goodbyes = 0,
+                .allocator = allocator,
+            };
+
+            return s;
+        }
     };
 
-    pub fn init(allocator: std.mem.Allocator) SimpleMessage {
-        return SimpleMessage{
-            .allocator = allocator,
-            .action = .PrintStatus,
-        };
+    // Initialize with default state
+    // Initialize with default state
+    pub fn init(allocator: std.mem.Allocator) FirstMessage {
+        _ = allocator;
+        return FirstMessage.GetCount;
     }
 
     // Convenience constructors
-    pub fn increment(self: SimpleMessage) SimpleMessage {
-        var new_msg = self;
-        new_msg.action = .Increment;
-        return new_msg;
+    pub fn hello_req(name: []const u8) FirstMessage {
+        return FirstMessage{ .Hello = name };
     }
 
-    pub fn decrement(self: SimpleMessage) SimpleMessage {
-        var new_msg = self;
-        new_msg.action = .Decrement;
-        return new_msg;
+    pub fn goodbye_req() FirstMessage {
+        return FirstMessage.Goodbye;
     }
 
-    pub fn setValue(self: SimpleMessage, val: i32) SimpleMessage {
-        var new_msg = self;
-        new_msg.action = .SetValue;
-        new_msg.parameter = val;
-        return new_msg;
+    pub fn ping_req(value: u32) FirstMessage {
+        return FirstMessage{ .Ping = value };
     }
 
-    pub fn addValue(self: SimpleMessage, val: i32) SimpleMessage {
-        var new_msg = self;
-        new_msg.action = .AddValue;
-        new_msg.parameter = val;
-        return new_msg;
+    pub fn getCount_req() FirstMessage {
+        return FirstMessage.GetCount;
     }
 
-    pub fn sayHello(self: SimpleMessage, name: []const u8) SimpleMessage {
-        var new_msg = self;
-        new_msg.action = .SayHello;
-        new_msg.text = name;
-        return new_msg;
+    pub fn reset_req() FirstMessage {
+        return FirstMessage.Reset;
     }
 
-    pub fn printStatus(self: SimpleMessage) SimpleMessage {
-        var new_msg = self;
-        new_msg.action = .PrintStatus;
-        return new_msg;
-    }
+    pub fn handle(self: *Actor(Self), msg: FirstMessage) ?void {
+        // Get or initialize state
+        var state = self.getState(State) orelse blk: {
+            const new_state = State.init(self.allocator) catch |err| {
+                std.debug.print("Failed to initialize state: {}\n", .{err});
+                return null;
+            };
 
-    pub fn reset(self: SimpleMessage) SimpleMessage {
-        var new_msg = self;
-        new_msg.action = .Reset;
-        return new_msg;
-    }
-
-    // Handler that directly modifies the state
-    pub fn handle(self: *Actor.Actor(SimpleMessage), msg: SimpleMessage) ?void {
-        _ = self; // autofix
-        var updated_msg = msg;
-        updated_msg.total_operations += 1;
-
-        switch (msg.action) {
-            .Increment => {
-                updated_msg.count += 1;
-                updated_msg.value += 1;
-                std.debug.print("Incremented: count={}, value={}, total_ops={}\n", .{ updated_msg.count, updated_msg.value, updated_msg.total_operations });
+            self.setState(new_state);
+            break :blk self.getState(State).?;
+        };
+        switch (msg) {
+            .Hello => |name| {
+                state.count += 1;
+                state.total_hellos += 1;
+                std.debug.print("Got Hello: {s} (count: {}, total_hellos: {})\n", .{ name, state.count, state.total_hellos });
             },
-            .Decrement => {
-                updated_msg.count += 1;
-                updated_msg.value -= 1;
-                std.debug.print("Decremented: count={}, value={}, total_ops={}\n", .{ updated_msg.count, updated_msg.value, updated_msg.total_operations });
+            .Goodbye => {
+                state.count += 1;
+                state.total_goodbyes += 1;
+                std.debug.print("Got Goodbye (count: {}, total_goodbyes: {})\n", .{ state.count, state.total_goodbyes });
             },
-            .SetValue => {
-                updated_msg.count += 1;
-                updated_msg.value = msg.parameter;
-                std.debug.print("Set value to {}: count={}, total_ops={}\n", .{ updated_msg.value, updated_msg.count, updated_msg.total_operations });
+            .Ping => |num| {
+                state.count += 1;
+                state.total_pings += 1;
+                std.debug.print("Got Ping: {} (count: {}, total_pings: {})\n", .{ num, state.count, state.total_pings });
             },
-            .AddValue => {
-                updated_msg.count += 1;
-                updated_msg.value += msg.parameter;
-                std.debug.print("Added {}: count={}, value={}, total_ops={}\n", .{ msg.parameter, updated_msg.count, updated_msg.value, updated_msg.total_operations });
-            },
-            .SayHello => {
-                updated_msg.count += 1;
-                const name = msg.text orelse "Anonymous";
-                std.debug.print("Hello {s}! count={}, total_ops={}\n", .{ name, updated_msg.count, updated_msg.total_operations });
-            },
-            .PrintStatus => {
-                std.debug.print("Status: count={}, value={}, total_ops={}\n", .{ updated_msg.count, updated_msg.value, updated_msg.total_operations });
+            .GetCount => {
+                std.debug.print("Current count: {}, hellos: {}, pings: {}, goodbyes: {}\n", .{ state.count, state.total_hellos, state.total_pings, state.total_goodbyes });
             },
             .Reset => {
-                updated_msg.count = 0;
-                updated_msg.value = 0;
-                updated_msg.total_operations = 0;
+                state.count = 0;
+                state.total_pings = 0;
+                state.total_hellos = 0;
+                state.total_goodbyes = 0;
                 std.debug.print("State reset\n", .{});
             },
         }
-
-        return updated_msg;
     }
 };

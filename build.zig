@@ -124,4 +124,31 @@ pub fn build(b: *std.Build) void {
     test_step.dependOn(&run_lib_unit_tests.step);
     test_step.dependOn(&run_exe_unit_tests.step);
     test_step.dependOn(&run_test.step);
+
+    // Documentation generation step
+    const docs_cmd = b.addSystemCommand(&[_][]const u8{
+        "python3",
+        "docs/generate_docs.py",
+        "src",
+        "docs",
+    });
+    
+    // Book generation step
+    const book_cmd = b.addSystemCommand(&[_][]const u8{
+        "python3",
+        "docs/generate_book.py",
+        "docs",
+        "-o",
+        "docs/zctor-complete-book.md",
+    });
+    
+    const docs_step = b.step("docs", "Generate API documentation");
+    docs_step.dependOn(&docs_cmd.step);
+    
+    const book_step = b.step("book", "Generate complete documentation book");
+    book_step.dependOn(&book_cmd.step);
+    
+    const all_docs_step = b.step("docs-all", "Generate all documentation");
+    all_docs_step.dependOn(&docs_cmd.step);
+    all_docs_step.dependOn(&book_cmd.step);
 }

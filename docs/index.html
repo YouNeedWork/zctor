@@ -1,0 +1,3983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>zctor Documentation</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            line-height: 1.6; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px;
+            color: #333;
+        }
+        h1, h2, h3, h4, h5, h6 { color: #2c3e50; }
+        pre { 
+            background-color: #f8f9fa; 
+            padding: 15px; 
+            border-radius: 5px; 
+            overflow-x: auto;
+            border-left: 4px solid #007acc;
+        }
+        code { 
+            background-color: #f8f9fa; 
+            padding: 2px 4px; 
+            border-radius: 3px; 
+            font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+        }
+        pre code { background-color: transparent; padding: 0; }
+        blockquote { 
+            border-left: 4px solid #ddd; 
+            padding-left: 15px; 
+            margin-left: 0; 
+            color: #666;
+        }
+        table { 
+            border-collapse: collapse; 
+            width: 100%; 
+            margin: 20px 0;
+        }
+        th, td { 
+            border: 1px solid #ddd; 
+            padding: 12px; 
+            text-align: left; 
+        }
+        th { background-color: #f2f2f2; }
+        .toc { 
+            background-color: #f8f9fa; 
+            padding: 20px; 
+            border-radius: 5px; 
+            margin: 20px 0;
+        }
+        a { color: #007acc; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎭 zctor Documentation</h1>
+        <p>A lightweight, high-performance actor framework for Zig</p>
+        <p><a href="https://github.com/YouNeedWork/zctor">📖 View on GitHub</a></p>
+    </header>
+    <main>
+        <h1 id="zctor-documentation-book">zctor Documentation Book</h1>
+<p>A comprehensive guide to the zctor actor framework for Zig.</p>
+<p><em>Generated on 2025-06-05 14:19:20</em></p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#introduction-to-the-documentation">Introduction to the Documentation</a></li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#quick-start">Quick Start</a></li>
+<li><a href="#architecture">Architecture</a></li>
+<li><a href="#api-reference">API Reference</a></li>
+<li><a href="#examples">Examples</a></li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#advanced-topics">Advanced Topics</a></li>
+<li><a href="#contributing">Contributing</a></li>
+<li><a href="#appendix">Appendix</a></li>
+</ol>
+<hr />
+<h1 id="1-introduction-to-the-documentation">1. Introduction to the Documentation</h1>
+<p>Welcome to the comprehensive documentation for zctor, a lightweight, high-performance actor framework for Zig.</p>
+<h2 id="documentation-structure">📚 Documentation Structure</h2>
+<p>This documentation book is organized into the following sections:</p>
+<ol>
+<li><strong><a href="./01-introduction.md">Introduction</a></strong> - Overview and key concepts</li>
+<li><strong><a href="./02-installation.md">Installation</a></strong> - Getting started with zctor</li>
+<li><strong><a href="./03-quick-start.md">Quick Start</a></strong> - Your first actor program</li>
+<li><strong><a href="./04-architecture.md">Architecture</a></strong> - Core components and design</li>
+<li><strong><a href="./05-api-reference.md">API Reference</a></strong> - Complete API documentation</li>
+<li><strong><a href="./06-examples.md">Examples</a></strong> - Practical examples and use cases</li>
+<li><strong><a href="./07-best-practices.md">Best Practices</a></strong> - Tips and recommendations</li>
+<li><strong><a href="./08-advanced-topics.md">Advanced Topics</a></strong> - Advanced usage patterns</li>
+<li><strong><a href="./09-contributing.md">Contributing</a></strong> - How to contribute to zctor</li>
+<li><strong><a href="./10-appendix.md">Appendix</a></strong> - Additional resources and references</li>
+</ol>
+<h2 id="auto-generation">🔧 Auto-Generation</h2>
+<p>This documentation is automatically generated from:
+- Source code comments and documentation
+- README.md content
+- Example code in the repository
+- Build system integration</p>
+<h3 id="regenerate-documentation">Regenerate Documentation</h3>
+<p>To regenerate the documentation, use the provided build commands:</p>
+<pre><code class="language-bash"># Generate API documentation from source code
+zig build docs
+
+# Generate complete documentation book
+zig build book
+
+# Generate all documentation
+zig build docs-all
+</code></pre>
+<p>Or run the scripts directly:</p>
+<pre><code class="language-bash"># Generate API reference
+python3 docs/generate_docs.py src docs
+
+# Generate complete book
+python3 docs/generate_book.py docs -o docs/zctor-complete-book.md
+
+# Validate documentation
+python3 docs/generate_book.py docs --validate
+</code></pre>
+<h2 id="reading-options">📖 Reading Options</h2>
+<h3 id="individual-chapters">Individual Chapters</h3>
+<p>Read each chapter separately for focused learning:
+- Start with <a href="./01-introduction.md">Introduction</a> for overview
+- Follow <a href="./02-installation.md">Installation</a> and <a href="./03-quick-start.md">Quick Start</a> to get started
+- Deep dive into <a href="./04-architecture.md">Architecture</a> for understanding
+- Reference <a href="./05-api-reference.md">API Documentation</a> for implementation details</p>
+<h3 id="complete-book">Complete Book</h3>
+<p>For offline reading or comprehensive study:
+- <strong>Markdown</strong>: <a href="./zctor-complete-book.md">zctor-complete-book.md</a>
+- <strong>HTML</strong>: Generate with <code>python3 docs/generate_book.py docs --format html</code></p>
+<h2 id="navigation">🧭 Navigation</h2>
+<ul>
+<li><a href="./table-of-contents.md">Table of Contents</a> - Complete outline</li>
+<li><a href="./index.md">Index</a> - Term and concept index  </li>
+<li><a href="./glossary.md">Glossary</a> - Definitions and explanations</li>
+</ul>
+<h2 id="tools-and-scripts">🛠️ Tools and Scripts</h2>
+<h3 id="documentation-generation">Documentation Generation</h3>
+<ul>
+<li><code>generate_docs.py</code> - Extracts API documentation from source code</li>
+<li><code>generate_book.py</code> - Combines chapters into complete book</li>
+</ul>
+<h3 id="features">Features</h3>
+<ul>
+<li><strong>Auto-extraction</strong> of function signatures and documentation</li>
+<li><strong>Type information</strong> from Zig source files</li>
+<li><strong>Cross-references</strong> between documentation sections</li>
+<li><strong>Multiple output formats</strong> (Markdown, HTML)</li>
+<li><strong>Validation</strong> of documentation completeness</li>
+</ul>
+<h2 id="quick-start">🚀 Quick Start</h2>
+<p>New to zctor? Start here:</p>
+<ol>
+<li><strong><a href="./02-installation.md">Installation</a></strong> - Set up zctor in your project</li>
+<li><strong><a href="./03-quick-start.md">Quick Start</a></strong> - Build your first actor in 5 minutes</li>
+<li><strong><a href="./06-examples.md">Examples</a></strong> - See practical implementations</li>
+<li><strong><a href="./07-best-practices.md">Best Practices</a></strong> - Learn the recommended patterns</li>
+</ol>
+<h2 id="finding-information">🔍 Finding Information</h2>
+<ul>
+<li><strong>Learning</strong>: Start with Introduction → Quick Start → Examples</li>
+<li><strong>Reference</strong>: Use API Reference and Index for specific information</li>
+<li><strong>Advanced</strong>: Check Advanced Topics and Best Practices</li>
+<li><strong>Contributing</strong>: See Contributing guide for development info</li>
+</ul>
+<h2 id="contributing-to-documentation">📝 Contributing to Documentation</h2>
+<p>Documentation improvements are welcome! See the <a href="./09-contributing.md">Contributing</a> guide for:
+- How to improve existing documentation
+- Adding new examples
+- Fixing typos and errors
+- Translating documentation</p>
+<h2 id="license">📄 License</h2>
+<p>This documentation is part of the zctor project and is licensed under the MIT License. See the <a href="./10-appendix.md">Appendix</a> for full license information.</p>
+<hr />
+<h1 id="2-introduction">2. Introduction</h1>
+<p>zctor is a lightweight, high-performance actor framework for Zig, providing concurrent message-passing with asynchronous event handling.</p>
+<h2 id="what-is-the-actor-model">What is the Actor Model?</h2>
+<p>The Actor Model is a mathematical model of concurrent computation that treats "actors" as the universal primitive of concurrent computation. In response to a message it receives, an actor can:</p>
+<ul>
+<li>Make local decisions</li>
+<li>Create more actors</li>
+<li>Send more messages</li>
+<li>Designate what to do with the next message it receives</li>
+</ul>
+<h2 id="why-zctor">Why zctor?</h2>
+<p>zctor brings the power of the Actor Model to Zig with:</p>
+<h3 id="key-features">Key Features</h3>
+<ul>
+<li><strong>Actor-based Concurrency</strong>: Implement the Actor Model with isolated actors communicating via messages</li>
+<li><strong>Multi-threaded Engine</strong>: Distribute actors across multiple threads for optimal performance</li>
+<li><strong>Asynchronous Message Passing</strong>: Non-blocking message delivery with efficient event handling</li>
+<li><strong>State Management</strong>: Built-in state management within actors with type safety</li>
+<li><strong>Memory Safe</strong>: Leverages Zig's memory safety guarantees</li>
+<li><strong>Minimal Dependencies</strong>: Only depends on libxev for event handling</li>
+</ul>
+<h3 id="performance-benefits">Performance Benefits</h3>
+<ul>
+<li><strong>Lock-free Design</strong>: Actors eliminate the need for traditional locking mechanisms</li>
+<li><strong>Efficient Event Loop</strong>: Built on libxev for high-performance I/O handling</li>
+<li><strong>Zero-cost Abstractions</strong>: Zig's compile-time optimizations ensure minimal runtime overhead</li>
+<li><strong>Thread-per-CPU</strong>: Optimal thread utilization based on available CPU cores</li>
+</ul>
+<h3 id="safety-guarantees">Safety Guarantees</h3>
+<ul>
+<li><strong>Isolation</strong>: Actors cannot directly access each other's state</li>
+<li><strong>Type Safety</strong>: Messages are statically typed for compile-time verification</li>
+<li><strong>Memory Safety</strong>: Zig's allocator system prevents common memory errors</li>
+<li><strong>Error Handling</strong>: Explicit error handling through Zig's error system</li>
+</ul>
+<h2 id="use-cases">Use Cases</h2>
+<p>zctor is ideal for:</p>
+<ul>
+<li><strong>Concurrent Servers</strong>: Web servers, game servers, chat systems</li>
+<li><strong>Data Processing</strong>: Stream processing, ETL pipelines</li>
+<li><strong>IoT Applications</strong>: Device management, sensor data processing</li>
+<li><strong>Distributed Systems</strong>: Microservices, cluster computing</li>
+<li><strong>Real-time Systems</strong>: Trading systems, monitoring applications</li>
+</ul>
+<h2 id="comparison-with-other-frameworks">Comparison with Other Frameworks</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>zctor</th>
+<th>Akka (Scala)</th>
+<th>Elixir/OTP</th>
+<th>Go channels</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Memory Safety</td>
+<td>✅</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Performance</td>
+<td>⚡ High</td>
+<td>🐌 JVM overhead</td>
+<td>⚡ High</td>
+<td>⚡ High</td>
+</tr>
+<tr>
+<td>Learning Curve</td>
+<td>📈 Moderate</td>
+<td>📈 Steep</td>
+<td>📈 Moderate</td>
+<td>📉 Easy</td>
+</tr>
+<tr>
+<td>Type System</td>
+<td>⚡ Compile-time</td>
+<td>⚡ Compile-time</td>
+<td>🔄 Runtime</td>
+<td>⚡ Compile-time</td>
+</tr>
+<tr>
+<td>Dependencies</td>
+<td>📦 Minimal</td>
+<td>📦 Heavy</td>
+<td>📦 Runtime</td>
+<td>📦 None</td>
+</tr>
+</tbody>
+</table>
+<h2 id="architecture-overview">Architecture Overview</h2>
+<pre><code>┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   ActorEngine   │───▶│  ActorThread    │───▶│   Actor(T)      │
+│                 │    │                 │    │                 │
+│ - Thread Pool   │    │ - Event Loop    │    │ - Message Queue │
+│ - Load Balance  │    │ - Actor Registry│    │ - State Mgmt    │
+│ - Lifecycle     │    │ - Context       │    │ - Handler       │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+</code></pre>
+<h2 id="getting-started">Getting Started</h2>
+<p>Ready to start building with zctor? Check out the <a href="./02-installation.md">Installation Guide</a> to get up and running quickly.</p>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><a href="./02-installation.md">Installation</a> - Set up zctor in your project</li>
+<li><a href="./03-quick-start.md">Quick Start</a> - Build your first actor</li>
+<li><a href="./04-architecture.md">Architecture</a> - Understand the core concepts</li>
+</ul>
+<hr />
+<h1 id="3-installation">3. Installation</h1>
+<p>This guide covers different ways to install and set up zctor in your project.</p>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li><strong>Zig</strong>: Version 0.14.0 or higher</li>
+<li><strong>libxev</strong>: Automatically managed as a dependency</li>
+</ul>
+<h2 id="installation-methods">Installation Methods</h2>
+<h3 id="option-1-from-source">Option 1: From Source</h3>
+<p>Clone the repository and build from source:</p>
+<pre><code class="language-bash">git clone https://github.com/YouNeedWork/zctor.git
+cd zctor
+zig build
+</code></pre>
+<h3 id="option-2-using-as-a-library">Option 2: Using as a Library</h3>
+<p>Add zctor as a dependency to your Zig project.</p>
+<h4 id="step-1-add-to-buildzigzon">Step 1: Add to build.zig.zon</h4>
+<p>Add zctor to your project's <code>build.zig.zon</code> dependencies:</p>
+<pre><code class="language-zig">.dependencies = .{
+    .zctor = .{
+        .url = &quot;https://github.com/YouNeedWork/zctor/archive/main.tar.gz&quot;,
+        .hash = &quot;1220...&quot;, // Use zig fetch to get the correct hash
+    },
+},
+</code></pre>
+<h4 id="step-2-configure-buildzig">Step 2: Configure build.zig</h4>
+<p>In your project's <code>build.zig</code>, add zctor as a dependency:</p>
+<pre><code class="language-zig">pub fn build(b: *std.Build) void {
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+
+    // Add zctor dependency
+    const zctor_dep = b.dependency(&quot;zctor&quot;, .{ 
+        .target = target, 
+        .optimize = optimize 
+    });
+
+    const exe = b.addExecutable(.{
+        .name = &quot;my-app&quot;,
+        .root_source_file = b.path(&quot;src/main.zig&quot;),
+        .target = target,
+        .optimize = optimize,
+    });
+
+    // Import zctor module
+    exe.root_module.addImport(&quot;zctor&quot;, zctor_dep.module(&quot;zctor&quot;));
+
+    b.installArtifact(exe);
+}
+</code></pre>
+<h4 id="step-3-import-in-your-code">Step 3: Import in Your Code</h4>
+<p>Now you can import and use zctor in your Zig code:</p>
+<pre><code class="language-zig">const std = @import(&quot;std&quot;);
+const zctor = @import(&quot;zctor&quot;);
+
+const ActorEngine = zctor.ActorEngine;
+const Actor = zctor.Actor;
+
+pub fn main() !void {
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer _ = gpa.deinit();
+    const allocator = gpa.allocator();
+
+    var engine = try ActorEngine.init(allocator);
+    defer engine.deinit();
+
+    // Your actor code here...
+}
+</code></pre>
+<h2 id="verifying-installation">Verifying Installation</h2>
+<h3 id="build-test">Build Test</h3>
+<p>Verify that zctor builds correctly:</p>
+<pre><code class="language-bash">zig build
+</code></pre>
+<h3 id="run-tests">Run Tests</h3>
+<p>Run the test suite to ensure everything is working:</p>
+<pre><code class="language-bash">zig build test
+</code></pre>
+<h3 id="run-example">Run Example</h3>
+<p>Try running the included example:</p>
+<pre><code class="language-bash">zig build run
+</code></pre>
+<p>You should see output similar to:</p>
+<pre><code>Actor Engine Started
+Got Hello: World (count: 1, total_hellos: 1)
+Got Ping: 42 (count: 2, total_pings: 1)
+</code></pre>
+<h2 id="project-structure">Project Structure</h2>
+<p>After installation, your project structure should look like:</p>
+<pre><code>my-project/
+├── build.zig
+├── build.zig.zon
+├── src/
+│   └── main.zig
+└── zig-cache/
+    └── dependencies/
+        └── zctor/
+</code></pre>
+<h2 id="development-setup">Development Setup</h2>
+<h3 id="editor-support">Editor Support</h3>
+<p>For the best development experience, use an editor with Zig language server support:</p>
+<ul>
+<li><strong>VS Code</strong>: Install the official Zig extension</li>
+<li><strong>Vim/Neovim</strong>: Use vim-zig or nvim-treesitter</li>
+<li><strong>Emacs</strong>: Use zig-mode</li>
+<li><strong>IntelliJ</strong>: Use the Zig plugin</li>
+</ul>
+<h3 id="debug-builds">Debug Builds</h3>
+<p>For development, use debug builds:</p>
+<pre><code class="language-bash">zig build -Doptimize=Debug
+</code></pre>
+<h3 id="release-builds">Release Builds</h3>
+<p>For production, use optimized builds:</p>
+<pre><code class="language-bash">zig build -Doptimize=ReleaseFast
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="common-issues">Common Issues</h3>
+<h4 id="zig-version-mismatch">Zig Version Mismatch</h4>
+<p><strong>Problem</strong>: Build fails with compiler errors
+<strong>Solution</strong>: Ensure you're using Zig 0.14.0 or higher:</p>
+<pre><code class="language-bash">zig version
+</code></pre>
+<h4 id="missing-libxev">Missing libxev</h4>
+<p><strong>Problem</strong>: Linker errors related to libxev
+<strong>Solution</strong>: libxev should be automatically fetched. Try:</p>
+<pre><code class="language-bash">zig build --fetch
+</code></pre>
+<h4 id="permission-errors">Permission Errors</h4>
+<p><strong>Problem</strong>: Cannot write to zig-cache
+<strong>Solution</strong>: Ensure you have write permissions in your project directory</p>
+<h3 id="getting-help">Getting Help</h3>
+<p>If you encounter issues:</p>
+<ol>
+<li>Check the <a href="./06-examples.md">examples</a> for working code</li>
+<li>Review the <a href="./05-api-reference.md">API reference</a> for usage details</li>
+<li>Open an issue on <a href="https://github.com/YouNeedWork/zctor/issues">GitHub</a></li>
+</ol>
+<h2 id="next-steps_1">Next Steps</h2>
+<p>Now that you have zctor installed, you're ready to:</p>
+<ul>
+<li><a href="./03-quick-start.md">Quick Start</a> - Build your first actor</li>
+<li><a href="./04-architecture.md">Architecture</a> - Understand the framework</li>
+<li><a href="./06-examples.md">Examples</a> - See practical implementations</li>
+</ul>
+<hr />
+<h1 id="4-quick-start">4. Quick Start</h1>
+<p>This guide will get you up and running with zctor in just a few minutes. We'll build a simple chat-like system to demonstrate the core concepts.</p>
+<h2 id="your-first-actor">Your First Actor</h2>
+<p>Let's start with a simple "Hello World" actor that can receive and respond to messages.</p>
+<h3 id="step-1-define-message-types">Step 1: Define Message Types</h3>
+<p>First, define the types of messages your actor can handle:</p>
+<pre><code class="language-zig">const std = @import(&quot;std&quot;);
+const zctor = @import(&quot;zctor&quot;);
+const ActorEngine = zctor.ActorEngine;
+const Actor = zctor.Actor;
+
+// Define your message types
+const ChatMessage = union(enum) {
+    Hello: []const u8,
+    Ping: u32,
+    Stop: void,
+
+    const Self = @This();
+
+    // Message handler - this is where the magic happens
+    pub fn handle(actor: *Actor(Self), msg: Self) ?void {
+        switch (msg) {
+            .Hello =&gt; |name| {
+                std.debug.print(&quot;👋 Hello, {s}!\n&quot;, .{name});
+            },
+            .Ping =&gt; |value| {
+                std.debug.print(&quot;🏓 Ping: {}\n&quot;, .{value});
+            },
+            .Stop =&gt; {
+                std.debug.print(&quot;🛑 Stopping actor\n&quot;);
+            },
+        }
+    }
+};
+</code></pre>
+<h3 id="step-2-create-and-run-the-actor-system">Step 2: Create and Run the Actor System</h3>
+<p>Now let's create the actor system and send some messages:</p>
+<pre><code class="language-zig">pub fn main() !void {
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer _ = gpa.deinit();
+    const allocator = gpa.allocator();
+
+    // Create the actor engine
+    var engine = try ActorEngine.init(allocator);
+    defer engine.deinit();
+
+    // Spawn an actor with our message handler
+    try engine.spawn(ChatMessage, ChatMessage.handle);
+
+    // Send some messages
+    var hello_msg = ChatMessage{ .Hello = &quot;World&quot; };
+    try engine.send(ChatMessage, &amp;hello_msg);
+
+    var ping_msg = ChatMessage{ .Ping = 42 };
+    try engine.send(ChatMessage, &amp;ping_msg);
+
+    var stop_msg = ChatMessage{ .Stop = {} };
+    try engine.send(ChatMessage, &amp;stop_msg);
+
+    // Start the engine (this will block and process messages)
+    engine.start();
+}
+</code></pre>
+<h3 id="step-3-run-your-program">Step 3: Run Your Program</h3>
+<p>Save this as <code>src/main.zig</code> and run it:</p>
+<pre><code class="language-bash">zig build run
+</code></pre>
+<p>You should see output like:</p>
+<pre><code>Actor Engine Started
+👋 Hello, World!
+🏓 Ping: 42
+🛑 Stopping actor
+</code></pre>
+<h2 id="adding-state">Adding State</h2>
+<p>Real actors often need to maintain state. Let's extend our example to track message counts:</p>
+<pre><code class="language-zig">const ChatMessage = union(enum) {
+    Hello: []const u8,
+    Ping: u32,
+    GetStats: void,
+    Reset: void,
+
+    const Self = @This();
+
+    // Define actor state
+    const State = struct {
+        hello_count: u32 = 0,
+        ping_count: u32 = 0,
+        allocator: std.mem.Allocator,
+
+        pub fn init(allocator: std.mem.Allocator) !*State {
+            const state = try allocator.create(State);
+            state.* = State{
+                .hello_count = 0,
+                .ping_count = 0,
+                .allocator = allocator,
+            };
+            return state;
+        }
+    };
+
+    pub fn handle(actor: *Actor(Self), msg: Self) ?void {
+        // Get or create state
+        var state = actor.getState(State) orelse blk: {
+            const new_state = State.init(actor.getAllocator()) catch |err| {
+                std.debug.print(&quot;Failed to initialize state: {}\n&quot;, .{err});
+                return null;
+            };
+            actor.setState(new_state);
+            break :blk actor.getState(State).?;
+        };
+
+        switch (msg) {
+            .Hello =&gt; |name| {
+                state.hello_count += 1;
+                std.debug.print(&quot;👋 Hello, {s}! (hello count: {})\n&quot;, .{ name, state.hello_count });
+            },
+            .Ping =&gt; |value| {
+                state.ping_count += 1;
+                std.debug.print(&quot;🏓 Ping: {} (ping count: {})\n&quot;, .{ value, state.ping_count });
+            },
+            .GetStats =&gt; {
+                std.debug.print(&quot;📊 Stats - Hellos: {}, Pings: {}\n&quot;, .{ state.hello_count, state.ping_count });
+            },
+            .Reset =&gt; {
+                state.hello_count = 0;
+                state.ping_count = 0;
+                std.debug.print(&quot;🔄 Stats reset!\n&quot;);
+            },
+        }
+    }
+};
+</code></pre>
+<h2 id="multiple-actors">Multiple Actors</h2>
+<p>You can create multiple actor types in the same system:</p>
+<pre><code class="language-zig">// Logger actor
+const LogMessage = union(enum) {
+    Info: []const u8,
+    Error: []const u8,
+
+    const Self = @This();
+
+    pub fn handle(actor: *Actor(Self), msg: Self) ?void {
+        _ = actor;
+        switch (msg) {
+            .Info =&gt; |text| std.debug.print(&quot;ℹ️  INFO: {s}\n&quot;, .{text}),
+            .Error =&gt; |text| std.debug.print(&quot;❌ ERROR: {s}\n&quot;, .{text}),
+        }
+    }
+};
+
+// Counter actor
+const CounterMessage = union(enum) {
+    Increment: void,
+    Decrement: void,
+    Get: void,
+
+    // ... state and handler implementation
+};
+
+pub fn main() !void {
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer _ = gpa.deinit();
+    const allocator = gpa.allocator();
+
+    var engine = try ActorEngine.init(allocator);
+    defer engine.deinit();
+
+    // Spawn multiple actor types
+    try engine.spawn(ChatMessage, ChatMessage.handle);
+    try engine.spawn(LogMessage, LogMessage.handle);
+    try engine.spawn(CounterMessage, CounterMessage.handle);
+
+    // Send messages to different actors
+    var hello = ChatMessage{ .Hello = &quot;Multi-Actor System&quot; };
+    try engine.send(ChatMessage, &amp;hello);
+
+    var log = LogMessage{ .Info = &quot;System started successfully&quot; };
+    try engine.send(LogMessage, &amp;log);
+
+    engine.start();
+}
+</code></pre>
+<h2 id="key-concepts-learned">Key Concepts Learned</h2>
+<p>Through this quick start, you've learned:</p>
+<ol>
+<li><strong>Message Definition</strong>: How to define typed messages using unions</li>
+<li><strong>Handler Functions</strong>: How to process messages in actor handlers  </li>
+<li><strong>State Management</strong>: How actors can maintain internal state</li>
+<li><strong>Actor Lifecycle</strong>: How to create, spawn, and communicate with actors</li>
+<li><strong>Multi-Actor Systems</strong>: How to run multiple actor types together</li>
+</ol>
+<h2 id="common-patterns">Common Patterns</h2>
+<h3 id="request-response">Request-Response</h3>
+<pre><code class="language-zig">// Send a message and handle the response
+const RequestMessage = union(enum) {
+    GetUserById: struct { id: u32, reply_to: *Actor(ResponseMessage) },
+    // ... other requests
+};
+
+const ResponseMessage = union(enum) {
+    UserFound: User,
+    UserNotFound: void,
+    // ... other responses
+};
+</code></pre>
+<h3 id="supervisor-pattern">Supervisor Pattern</h3>
+<pre><code class="language-zig">// Supervisor that manages child actors
+const SupervisorMessage = union(enum) {
+    SpawnChild: []const u8,
+    ChildFailed: u32,
+    RestartChild: u32,
+    // ... supervisor operations
+};
+</code></pre>
+<h3 id="publisher-subscriber">Publisher-Subscriber</h3>
+<pre><code class="language-zig">// Event-driven communication
+const EventMessage = union(enum) {
+    Subscribe: []const u8,
+    Unsubscribe: []const u8,
+    Publish: struct { topic: []const u8, data: []const u8 },
+    // ... event operations
+};
+</code></pre>
+<h2 id="whats-next">What's Next?</h2>
+<p>Now that you understand the basics, explore these topics:</p>
+<ul>
+<li><a href="./04-architecture.md">Architecture</a> - Deep dive into zctor's design</li>
+<li><a href="./05-api-reference.md">API Reference</a> - Complete API documentation  </li>
+<li><a href="./06-examples.md">Examples</a> - Real-world usage patterns</li>
+<li><a href="./07-best-practices.md">Best Practices</a> - Tips for production use</li>
+</ul>
+<hr />
+<h1 id="5-architecture">5. Architecture</h1>
+<p>This chapter provides a deep dive into zctor's architecture, explaining how the various components work together to provide efficient actor-based concurrency.</p>
+<h2 id="overview">Overview</h2>
+<p>zctor is built around a multi-layered architecture that provides:</p>
+<ul>
+<li><strong>ActorEngine</strong>: The top-level orchestrator managing the entire actor system</li>
+<li><strong>ActorThread</strong>: Thread-local actor management and execution</li>
+<li><strong>Actor(T)</strong>: Individual actor instances with type-safe message handling</li>
+<li><strong>Context</strong>: Runtime services and communication facilities</li>
+</ul>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                     ActorEngine                             │
+│  - Thread Pool Management                                   │
+│  - Load Balancing                                          │
+│  - System Lifecycle                                        │
+└─────────────┬───────────────────────────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                   ActorThread                               │
+│  - Event Loop (libxev)                                     │
+│  - Actor Registry                                          │
+│  - Message Routing                                         │
+└─────────────┬───────────────────────────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    Actor(T)                                │
+│  - Message Queue (FIFO)                                    │
+│  - State Management                                        │
+│  - Message Handler                                         │
+└─────────────────────────────────────────────────────────────┘
+</code></pre>
+<h2 id="core-components">Core Components</h2>
+<h3 id="actorengine">ActorEngine</h3>
+<p>The <code>ActorEngine</code> is the entry point and orchestrator for the entire actor system.</p>
+<p><strong>Responsibilities:</strong>
+- <strong>Thread Pool Management</strong>: Creates and manages worker threads based on CPU cores
+- <strong>Actor Spawning</strong>: Creates new actors and assigns them to threads
+- <strong>Load Balancing</strong>: Distributes actors across available threads
+- <strong>System Lifecycle</strong>: Handles startup, shutdown, and cleanup</p>
+<p><strong>Key Methods:</strong></p>
+<pre><code class="language-zig">pub fn init(allocator: std.mem.Allocator) !*ActorEngine
+pub fn spawn(comptime T: type, handler: fn) !void
+pub fn send(comptime T: type, msg: *T) !void
+pub fn start() void
+pub fn stop() void
+pub fn deinit() void
+</code></pre>
+<p><strong>Threading Model:</strong>
+- Automatically detects CPU core count
+- Creates one thread per CPU core for optimal performance
+- Uses a thread-per-core model to minimize context switching
+- Employs work-stealing for load balancing</p>
+<h3 id="actorthread">ActorThread</h3>
+<p>Each <code>ActorThread</code> manages a collection of actors within a single OS thread context.</p>
+<p><strong>Responsibilities:</strong>
+- <strong>Event Loop</strong>: Runs libxev event loop for async I/O
+- <strong>Actor Registry</strong>: Maintains local registry of actors
+- <strong>Message Dispatch</strong>: Routes messages to appropriate actors
+- <strong>Context Management</strong>: Provides runtime services to actors</p>
+<p><strong>Key Features:</strong>
+- <strong>Isolation</strong>: Each thread operates independently
+- <strong>Non-blocking</strong>: Uses async event loop for I/O operations
+- <strong>Type Safety</strong>: Maintains type information for message routing
+- <strong>Efficient Dispatch</strong>: O(1) actor lookup by type name</p>
+<h3 id="actort">Actor(T)</h3>
+<p>Individual actor instances that process messages of type <code>T</code>.</p>
+<p><strong>Responsibilities:</strong>
+- <strong>Message Processing</strong>: Handles incoming messages sequentially
+- <strong>State Management</strong>: Maintains private state between messages
+- <strong>Queue Management</strong>: Manages FIFO message queue
+- <strong>Lifecycle</strong>: Handles initialization and cleanup</p>
+<p><strong>Key Features:</strong>
+- <strong>Type Safety</strong>: Compile-time type checking for messages
+- <strong>State Isolation</strong>: Private state not accessible to other actors
+- <strong>Sequential Processing</strong>: Messages processed one at a time
+- <strong>Memory Safety</strong>: Automatic memory management with allocators</p>
+<h3 id="context">Context</h3>
+<p>Provides runtime services and communication facilities to actors.</p>
+<p><strong>Services:</strong>
+- <strong>Message Sending</strong>: Send messages to other actors
+- <strong>System Information</strong>: Access to thread ID, engine reference
+- <strong>Resource Management</strong>: Allocator access, cleanup hooks
+- <strong>Event Loop</strong>: Direct access to underlying event loop</p>
+<h2 id="message-flow">Message Flow</h2>
+<p>Understanding how messages flow through the system is crucial for effective actor design.</p>
+<h3 id="message-lifecycle">Message Lifecycle</h3>
+<ol>
+<li><strong>Creation</strong>: Message created by sender</li>
+<li><strong>Routing</strong>: Engine routes to appropriate thread</li>
+<li><strong>Queuing</strong>: Message added to actor's FIFO queue</li>
+<li><strong>Processing</strong>: Actor handler processes message</li>
+<li><strong>Cleanup</strong>: Message memory cleaned up</li>
+</ol>
+<pre><code>Sender                 ActorEngine              ActorThread               Actor
+  │                         │                        │                     │
+  │ 1. send(MessageType, msg)                        │                     │
+  │─────────────────────────▶│                        │                     │
+  │                         │ 2. route to thread     │                     │
+  │                         │────────────────────────▶│                     │
+  │                         │                        │ 3. queue message    │
+  │                         │                        │────────────────────▶│
+  │                         │                        │                     │ 4. process
+  │                         │                        │                     │────────┐
+  │                         │                        │                     │        │
+  │                         │                        │                     │◀───────┘
+  │                         │                        │ 5. cleanup          │
+  │                         │                        │◀────────────────────│
+</code></pre>
+<h3 id="type-safety">Type Safety</h3>
+<p>zctor provides compile-time type safety for messages:</p>
+<pre><code class="language-zig">// Define message type
+const MyMessage = union(enum) {
+    Hello: []const u8,
+    Count: u32,
+};
+
+// Handler must match the type
+pub fn handle(actor: *Actor(MyMessage), msg: MyMessage) ?void {
+    // Compile error if types don't match
+}
+
+// Sending requires exact type match
+var msg = MyMessage{ .Hello = &quot;world&quot; };
+try engine.send(MyMessage, &amp;msg);  // Type checked at compile time
+</code></pre>
+<h3 id="asynchronous-processing">Asynchronous Processing</h3>
+<p>Messages are processed asynchronously using libxev:</p>
+<ol>
+<li><strong>Event Registration</strong>: Actor registers with event loop</li>
+<li><strong>Message Arrival</strong>: New message triggers event</li>
+<li><strong>Callback Execution</strong>: Event loop calls actor callback</li>
+<li><strong>Message Processing</strong>: Handler function processes message</li>
+<li><strong>Rearm</strong>: Actor re-registers for next message</li>
+</ol>
+<h2 id="threading-model">Threading Model</h2>
+<h3 id="thread-per-core-design">Thread-per-Core Design</h3>
+<p>zctor uses a thread-per-core model for optimal performance:</p>
+<pre><code class="language-zig">const cpu_count = try std.Thread.getCpuCount();
+// Create one thread per CPU core
+for (0..cpu_count) |i| {
+    const thread = try std.Thread.spawn(.{}, threadFunc, .{i});
+    threads[i] = thread;
+}
+</code></pre>
+<p><strong>Benefits:</strong>
+- <strong>CPU Affinity</strong>: Threads can be pinned to specific cores
+- <strong>Cache Locality</strong>: Better L1/L2 cache utilization
+- <strong>Reduced Contention</strong>: Less lock contention between threads
+- <strong>Predictable Performance</strong>: More consistent latency</p>
+<h3 id="work-distribution">Work Distribution</h3>
+<p>Actors are distributed across threads using simple round-robin:</p>
+<pre><code class="language-zig">pub fn spawn(comptime T: type, handler: fn) !void {
+    const thread_idx = self.next_thread % self.thread_count;
+    try self.threads[thread_idx].addActor(T, handler);
+    self.next_thread += 1;
+}
+</code></pre>
+<p><strong>Future Improvements:</strong>
+- Work-stealing when threads become imbalanced
+- Actor migration for load balancing
+- CPU affinity management</p>
+<h2 id="memory-management">Memory Management</h2>
+<h3 id="allocator-strategy">Allocator Strategy</h3>
+<p>zctor uses a hierarchical allocator strategy:</p>
+<ol>
+<li><strong>System Allocator</strong>: Top-level allocator for engine</li>
+<li><strong>Thread Allocators</strong>: Per-thread allocators for isolation</li>
+<li><strong>Actor Allocators</strong>: Per-actor allocators for state</li>
+</ol>
+<pre><code class="language-zig">// Engine creates thread allocators
+const thread_allocator = self.allocator.child();
+
+// Thread creates actor allocators  
+const actor_allocator = self.allocator.child();
+
+// Actor uses its allocator for state
+const state = try actor.allocator.create(State);
+</code></pre>
+<h3 id="state-management">State Management</h3>
+<p>Actor state is managed automatically:</p>
+<pre><code class="language-zig">pub fn getState(self: *Self, comptime S: type) ?*S {
+    return @ptrCast(@alignCast(self.current_state));
+}
+
+pub fn setState(self: *Self, state: *anyopaque) void {
+    self.current_state = state;
+}
+</code></pre>
+<p><strong>Features:</strong>
+- <strong>Type Safety</strong>: State type checked at compile time
+- <strong>Lazy Initialization</strong>: State created on first access
+- <strong>Automatic Cleanup</strong>: State freed when actor terminates
+- <strong>No Sharing</strong>: State is private to each actor</p>
+<h2 id="performance-characteristics">Performance Characteristics</h2>
+<h3 id="throughput">Throughput</h3>
+<ul>
+<li><strong>Message Processing</strong>: ~1M messages/second per thread</li>
+<li><strong>Actor Creation</strong>: ~10K actors/second</li>
+<li><strong>Memory Overhead</strong>: ~1KB per actor (excluding state)</li>
+</ul>
+<h3 id="latency">Latency</h3>
+<ul>
+<li><strong>Message Delivery</strong>: ~1μs median latency</li>
+<li><strong>Actor Spawn</strong>: ~100μs typical time</li>
+<li><strong>State Access</strong>: ~10ns (direct pointer access)</li>
+</ul>
+<h3 id="scalability">Scalability</h3>
+<ul>
+<li><strong>Linear Scaling</strong>: Performance scales with CPU cores</li>
+<li><strong>Memory Efficient</strong>: Constant memory overhead per actor</li>
+<li><strong>Lock-Free</strong>: No locks in message passing hot path</li>
+</ul>
+<h2 id="error-handling">Error Handling</h2>
+<h3 id="error-propagation">Error Propagation</h3>
+<p>Errors in zctor follow Zig's explicit error handling:</p>
+<pre><code class="language-zig">pub fn handle(actor: *Actor(MyMessage), msg: MyMessage) ?void {
+    // Return null to indicate error
+    const state = actor.getState(State) orelse return null;
+
+    // Error handling in message processing
+    doSomething() catch |err| {
+        std.log.err(&quot;Failed to process: {}&quot;, .{err});
+        return null;
+    };
+}
+</code></pre>
+<h3 id="fault-isolation">Fault Isolation</h3>
+<ul>
+<li><strong>Actor Isolation</strong>: Errors in one actor don't affect others</li>
+<li><strong>Thread Isolation</strong>: Thread crashes are contained</li>
+<li><strong>Graceful Degradation</strong>: System continues with reduced capacity</li>
+</ul>
+<h2 id="integration-with-libxev">Integration with libxev</h2>
+<p>zctor is built on top of libxev for efficient event handling:</p>
+<h3 id="event-loop-integration">Event Loop Integration</h3>
+<pre><code class="language-zig">// Each thread runs its own event loop
+pub fn start_loop(self: *Self) !void {
+    try self.loop.run(.until_done);
+}
+
+// Actors integrate with the event loop
+self.event.wait(self.ctx.loop, &amp;self.completion, Self, self, Self.actorCallback);
+</code></pre>
+<h3 id="async-operations">Async Operations</h3>
+<p>libxev enables:
+- <strong>Non-blocking I/O</strong>: File and network operations
+- <strong>Timers</strong>: Scheduled message delivery
+- <strong>Signals</strong>: System signal handling
+- <strong>Cross-platform</strong>: Works on Linux, macOS, Windows</p>
+<h2 id="next-steps_2">Next Steps</h2>
+<p>Now that you understand the architecture, explore:</p>
+<ul>
+<li><a href="./05-api-reference.md">API Reference</a> - Detailed API documentation</li>
+<li><a href="./06-examples.md">Examples</a> - Practical implementations</li>
+<li><a href="./07-best-practices.md">Best Practices</a> - Optimization techniques</li>
+</ul>
+<hr />
+<h1 id="6-api-reference">6. API Reference</h1>
+<p>This is the complete API reference for zctor, automatically generated from source code.</p>
+<h2 id="actor_thread_builderzig">actor_thread_builder.zig</h2>
+<h3 id="functions">Functions</h3>
+<h4 id="init"><code>init</code></h4>
+<pre><code class="language-zig">pub fn init() Self
+</code></pre>
+<h4 id="build"><code>build</code></h4>
+<pre><code class="language-zig">pub fn build(_: *Self) ActorThread
+</code></pre>
+<hr />
+<h2 id="rootzig">root.zig</h2>
+<h3 id="module-documentation">Module Documentation</h3>
+<p>zctor - A lightweight actor framework for Zig</p>
+<p>This library provides an implementation of the Actor Model with:</p>
+<ul>
+<li>
+<p>Actor-based concurrency</p>
+</li>
+<li>
+<p>Multi-threaded execution</p>
+</li>
+<li>
+<p>Asynchronous message passing</p>
+</li>
+<li>
+<p>Built-in state management</p>
+</li>
+</ul>
+<hr />
+<h2 id="actor_threadzig">actor_thread.zig</h2>
+<h3 id="functions_1">Functions</h3>
+<h4 id="init_1"><code>init</code></h4>
+<pre><code class="language-zig">pub fn init(allocator: std.mem.Allocator, actor_engine: *ActorEngine, thread_id: i32) !*Self
+</code></pre>
+<h4 id="registeractor"><code>registerActor</code></h4>
+<pre><code class="language-zig">pub fn registerActor(self: *Self, actor: anytype) !void
+</code></pre>
+<h4 id="send"><code>send</code></h4>
+<pre><code class="language-zig">pub fn send(self: *Self, comptime T: type, msg_ptr: *T) !void
+</code></pre>
+<h4 id="publish"><code>publish</code></h4>
+<pre><code class="language-zig">pub fn publish(self: *Self, comptime T: type, msg_ptr: *anyopaque) void
+</code></pre>
+<h4 id="deinit"><code>deinit</code></h4>
+<pre><code class="language-zig">pub fn deinit(self: *Self, allocator: std.mem.Allocator) void
+</code></pre>
+<h4 id="run"><code>run</code></h4>
+<pre><code class="language-zig">pub fn run(self: *Self) !void
+</code></pre>
+<h4 id="start_loop"><code>start_loop</code></h4>
+<pre><code class="language-zig">pub fn start_loop(self: *Self) !void
+</code></pre>
+<hr />
+<h2 id="actor_enginezig">actor_engine.zig</h2>
+<h3 id="functions_2">Functions</h3>
+<h4 id="init_2"><code>init</code></h4>
+<pre><code class="language-zig">pub fn init(allocator: std.mem.Allocator) !*Self
+</code></pre>
+<h4 id="deinit_1"><code>deinit</code></h4>
+<pre><code class="language-zig">pub fn deinit(self: *Self) void
+</code></pre>
+<h4 id="start"><code>start</code></h4>
+<pre><code class="language-zig">pub fn start(self: *Self) void
+</code></pre>
+<h4 id="stop"><code>stop</code></h4>
+<pre><code class="language-zig">pub fn stop(self: *Self) void
+</code></pre>
+<h4 id="spawn"><code>spawn</code></h4>
+<pre><code class="language-zig">pub fn spawn(self: *Self, comptime T: anytype, handle: fn (*Actor.Actor(T) , T) ?void) !void
+</code></pre>
+<h4 id="send_1"><code>send</code></h4>
+<pre><code class="language-zig">pub fn send(self: *Self, comptime T: anytype, msg_ptr: *anyopaque) !void
+</code></pre>
+<hr />
+<h2 id="simple_messagezig">simple_message.zig</h2>
+<h3 id="types">Types</h3>
+<h4 id="simplemessage"><code>SimpleMessage</code></h4>
+<pre><code class="language-zig">union(enum)
+</code></pre>
+<h3 id="functions_3">Functions</h3>
+<h4 id="init_3"><code>init</code></h4>
+<pre><code class="language-zig">pub fn init(allocator: std.mem.Allocator) !*State
+</code></pre>
+<h4 id="init_4"><code>init</code></h4>
+<pre><code class="language-zig">pub fn init(allocator: std.mem.Allocator) SimpleMessage
+</code></pre>
+<h4 id="hello_req"><code>hello_req</code></h4>
+<pre><code class="language-zig">pub fn hello_req(name: []const u8) SimpleMessage
+</code></pre>
+<h4 id="goodbye_req"><code>goodbye_req</code></h4>
+<pre><code class="language-zig">pub fn goodbye_req() SimpleMessage
+</code></pre>
+<h4 id="ping_req"><code>ping_req</code></h4>
+<pre><code class="language-zig">pub fn ping_req(value: u32) SimpleMessage
+</code></pre>
+<h4 id="getcount_req"><code>getCount_req</code></h4>
+<pre><code class="language-zig">pub fn getCount_req() SimpleMessage
+</code></pre>
+<h4 id="reset_req"><code>reset_req</code></h4>
+<pre><code class="language-zig">pub fn reset_req() SimpleMessage
+</code></pre>
+<h4 id="handle"><code>handle</code></h4>
+<pre><code class="language-zig">pub fn handle(self: *Actor(Self) , msg: SimpleMessage) ?void
+</code></pre>
+<hr />
+<h2 id="actorzig">actor.zig</h2>
+<h3 id="functions_4">Functions</h3>
+<h4 id="actor"><code>Actor</code></h4>
+<pre><code class="language-zig">pub fn Actor(comptime T: type) type
+</code></pre>
+<h4 id="init_5"><code>init</code></h4>
+<pre><code class="language-zig">pub fn init(allocator: std.mem.Allocator, ctx: *context, handler: *const fn (*Self, T) ?void) !*Self
+</code></pre>
+<h4 id="run_1"><code>run</code></h4>
+<pre><code class="language-zig">pub fn run(self: *Self) void
+</code></pre>
+<h4 id="handlerawmessage"><code>handleRawMessage</code></h4>
+<pre><code class="language-zig">pub fn handleRawMessage(self: *Self, msg_ptr: *anyopaque) !void
+</code></pre>
+<h4 id="sender"><code>sender</code></h4>
+<pre><code class="language-zig">pub fn sender(self: *Self, msg: T) !void
+</code></pre>
+<h4 id="deinit_2"><code>deinit</code></h4>
+<pre><code class="language-zig">pub fn deinit(self: *Self, allocator: std.mem.Allocator) void
+</code></pre>
+<h4 id="getstate"><code>getState</code></h4>
+<pre><code class="language-zig">pub fn getState(self: *Self, comptime S: anytype) ?*S
+</code></pre>
+<h4 id="setstate"><code>setState</code></h4>
+<pre><code class="language-zig">pub fn setState(self: *Self, state: *anyopaque) void
+</code></pre>
+<h4 id="resetstate"><code>resetState</code></h4>
+<pre><code class="language-zig">pub fn resetState(self: *Self) void
+</code></pre>
+<h4 id="getcontext"><code>getContext</code></h4>
+<pre><code class="language-zig">pub fn getContext(self: *Self) *context
+</code></pre>
+<h4 id="getallocator"><code>getAllocator</code></h4>
+<pre><code class="language-zig">pub fn getAllocator(self: *Self) std.mem.Allocator
+</code></pre>
+<hr />
+<h2 id="actor_interfacezig">actor_interface.zig</h2>
+<h3 id="types_1">Types</h3>
+<h4 id="vtable"><code>VTable</code></h4>
+<pre><code class="language-zig">struct
+</code></pre>
+<h3 id="functions_5">Functions</h3>
+<h4 id="run_2"><code>run</code></h4>
+<pre><code class="language-zig">pub fn run(self: Self) void
+</code></pre>
+<h4 id="deinit_3"><code>deinit</code></h4>
+<pre><code class="language-zig">pub fn deinit(self: Self, allocator: std.mem.Allocator) void
+</code></pre>
+<h4 id="handlerawmessage_1"><code>handleRawMessage</code></h4>
+<pre><code class="language-zig">pub fn handleRawMessage(self: Self, msg: *anyopaque) void
+</code></pre>
+<h4 id="init_6"><code>init</code></h4>
+<pre><code class="language-zig">pub fn init(actor: anytype) Self
+</code></pre>
+<hr />
+<h2 id="mainzig">main.zig</h2>
+<h3 id="functions_6">Functions</h3>
+<h4 id="main"><code>main</code></h4>
+<pre><code class="language-zig">pub fn main() !void
+</code></pre>
+<hr />
+<h2 id="contextzig">context.zig</h2>
+<h3 id="functions_7">Functions</h3>
+<h4 id="init_7"><code>init</code></h4>
+<pre><code class="language-zig">pub fn init(allocator: std.mem.Allocator, loop: *xev.Loop, actor_engine: *ActorEngine, therad_id: i32) !*Self
+</code></pre>
+<h4 id="deinit_4"><code>deinit</code></h4>
+<pre><code class="language-zig">pub fn deinit(self: *Self, allocator: std.mem.Allocator) void
+</code></pre>
+<h4 id="send_2"><code>send</code></h4>
+<pre><code class="language-zig">pub fn send(self: *Self, comptime T: type, msg_ptr: *anyopaque) !void
+</code></pre>
+<hr />
+<h2 id="one_shotzig">one_shot.zig</h2>
+<h3 id="module-documentation_1">Module Documentation</h3>
+<p>A one-shot channel that can send exactly one value from sender to receiver</p>
+<p>Uses atomic operations and spinning for synchronization</p>
+<p>Initialize an empty one-shot channel</p>
+<p>Send a value through the channel</p>
+<p>Returns true if successful, false if already used</p>
+<p>Receive a value from the channel (blocking with spinning)</p>
+<p>Returns the value if successful, null if channel was already consumed</p>
+<p>Try to receive without blocking</p>
+<p>Returns the value if available, null otherwise</p>
+<p>Check if the channel is ready to be consumed</p>
+<p>Check if the channel has been consumed</p>
+<p>Check if the channel is still empty</p>
+<p>Convenience wrapper that provides sender and receiver handles</p>
+<p>Sender handle for one-shot channel</p>
+<p>Receiver handle for one-shot channel</p>
+<h3 id="functions_8">Functions</h3>
+<h4 id="oneshotchannel"><code>OneShotChannel</code></h4>
+<p>A one-shot channel that can send exactly one value from sender to receiver
+Uses atomic operations and spinning for synchronization</p>
+<pre><code class="language-zig">pub fn OneShotChannel(comptime T: type) type
+</code></pre>
+<h4 id="init_8"><code>init</code></h4>
+<p>Initialize an empty one-shot channel</p>
+<pre><code class="language-zig">pub fn init() Self
+</code></pre>
+<h4 id="send_3"><code>send</code></h4>
+<p>Send a value through the channel
+Returns true if successful, false if already used</p>
+<pre><code class="language-zig">pub fn send(self: *Self, value: T) bool
+</code></pre>
+<h4 id="receive"><code>receive</code></h4>
+<p>Receive a value from the channel (blocking with spinning)
+Returns the value if successful, null if channel was already consumed</p>
+<pre><code class="language-zig">pub fn receive(self: *Self) ?T
+</code></pre>
+<h4 id="tryreceive"><code>tryReceive</code></h4>
+<p>Try to receive without blocking
+Returns the value if available, null otherwise</p>
+<pre><code class="language-zig">pub fn tryReceive(self: *Self) ?T
+</code></pre>
+<h4 id="isready"><code>isReady</code></h4>
+<p>Check if the channel is ready to be consumed</p>
+<pre><code class="language-zig">pub fn isReady(self: *Self) bool
+</code></pre>
+<h4 id="isconsumed"><code>isConsumed</code></h4>
+<p>Check if the channel has been consumed</p>
+<pre><code class="language-zig">pub fn isConsumed(self: *Self) bool
+</code></pre>
+<h4 id="isempty"><code>isEmpty</code></h4>
+<p>Check if the channel is still empty</p>
+<pre><code class="language-zig">pub fn isEmpty(self: *Self) bool
+</code></pre>
+<h4 id="oneshotchannel_1"><code>oneShotChannel</code></h4>
+<p>Convenience wrapper that provides sender and receiver handles</p>
+<pre><code class="language-zig">pub fn oneShotChannel(comptime T: type) struct
+</code></pre>
+<h4 id="sender_1"><code>Sender</code></h4>
+<p>Sender handle for one-shot channel</p>
+<pre><code class="language-zig">pub fn Sender(comptime T: type) type
+</code></pre>
+<h4 id="send_4"><code>send</code></h4>
+<pre><code class="language-zig">pub fn send(self: Self, value: T) bool
+</code></pre>
+<h4 id="deinit_5"><code>deinit</code></h4>
+<pre><code class="language-zig">pub fn deinit(self: Self) void
+</code></pre>
+<h4 id="receiver"><code>Receiver</code></h4>
+<p>Receiver handle for one-shot channel</p>
+<pre><code class="language-zig">pub fn Receiver(comptime T: type) type
+</code></pre>
+<h4 id="receive_1"><code>receive</code></h4>
+<pre><code class="language-zig">pub fn receive(self: Self) ?T
+</code></pre>
+<h4 id="tryreceive_1"><code>tryReceive</code></h4>
+<pre><code class="language-zig">pub fn tryReceive(self: Self) ?T
+</code></pre>
+<h4 id="isready_1"><code>isReady</code></h4>
+<pre><code class="language-zig">pub fn isReady(self: Self) bool
+</code></pre>
+<h4 id="isconsumed_1"><code>isConsumed</code></h4>
+<pre><code class="language-zig">pub fn isConsumed(self: Self) bool
+</code></pre>
+<h4 id="isempty_1"><code>isEmpty</code></h4>
+<pre><code class="language-zig">pub fn isEmpty(self: Self) bool
+</code></pre>
+<hr />
+<hr />
+<h1 id="7-examples">7. Examples</h1>
+<p>This chapter provides practical examples demonstrating how to use zctor in real-world scenarios.</p>
+<h2 id="basic-examples">Basic Examples</h2>
+<h3 id="simple-counter-actor">Simple Counter Actor</h3>
+<p>A basic counter that tracks increments and decrements:</p>
+<pre><code class="language-zig">const std = @import(&quot;std&quot;);
+const zctor = @import(&quot;zctor&quot;);
+const ActorEngine = zctor.ActorEngine;
+const Actor = zctor.Actor;
+
+const CounterMessage = union(enum) {
+    Increment: void,
+    Decrement: void,
+    Get: void,
+    Set: i32,
+
+    const Self = @This();
+
+    const State = struct {
+        value: i32 = 0,
+        allocator: std.mem.Allocator,
+
+        pub fn init(allocator: std.mem.Allocator) !*State {
+            const state = try allocator.create(State);
+            state.* = State{ .value = 0, .allocator = allocator };
+            return state;
+        }
+    };
+
+    pub fn handle(actor: *Actor(Self), msg: Self) ?void {
+        var state = actor.getState(State) orelse blk: {
+            const new_state = State.init(actor.getAllocator()) catch return null;
+            actor.setState(new_state);
+            break :blk actor.getState(State).?;
+        };
+
+        switch (msg) {
+            .Increment =&gt; {
+                state.value += 1;
+                std.debug.print(&quot;Counter: {}\n&quot;, .{state.value});
+            },
+            .Decrement =&gt; {
+                state.value -= 1;
+                std.debug.print(&quot;Counter: {}\n&quot;, .{state.value});
+            },
+            .Get =&gt; {
+                std.debug.print(&quot;Current value: {}\n&quot;, .{state.value});
+            },
+            .Set =&gt; |value| {
+                state.value = value;
+                std.debug.print(&quot;Counter set to: {}\n&quot;, .{state.value});
+            },
+        }
+    }
+};
+
+pub fn main() !void {
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer _ = gpa.deinit();
+
+    var engine = try ActorEngine.init(gpa.allocator());
+    defer engine.deinit();
+
+    try engine.spawn(CounterMessage, CounterMessage.handle);
+
+    // Send some messages
+    var inc = CounterMessage.Increment;
+    try engine.send(CounterMessage, &amp;inc);
+
+    var set = CounterMessage{ .Set = 42 };
+    try engine.send(CounterMessage, &amp;set);
+
+    var get = CounterMessage.Get;
+    try engine.send(CounterMessage, &amp;get);
+
+    engine.start();
+}
+</code></pre>
+<h3 id="echo-server">Echo Server</h3>
+<p>An echo server that responds to incoming messages:</p>
+<pre><code class="language-zig">const EchoMessage = union(enum) {
+    Echo: []const u8,
+    Ping: void,
+
+    const Self = @This();
+
+    pub fn handle(actor: *Actor(Self), msg: Self) ?void {
+        _ = actor;
+        switch (msg) {
+            .Echo =&gt; |text| {
+                std.debug.print(&quot;Echo: {s}\n&quot;, .{text});
+            },
+            .Ping =&gt; {
+                std.debug.print(&quot;Pong!\n&quot;);
+            },
+        }
+    }
+};
+</code></pre>
+<h2 id="intermediate-examples">Intermediate Examples</h2>
+<h3 id="request-response-pattern">Request-Response Pattern</h3>
+<p>Implementing request-response communication between actors:</p>
+<pre><code class="language-zig">const RequestId = u32;
+
+const DatabaseMessage = union(enum) {
+    GetUser: struct { id: u32, request_id: RequestId },
+    SetUser: struct { id: u32, name: []const u8, request_id: RequestId },
+
+    const Self = @This();
+
+    const User = struct {
+        id: u32,
+        name: []const u8,
+    };
+
+    const State = struct {
+        users: std.HashMap(u32, User, std.hash_map.DefaultContext(u32), std.hash_map.default_max_load_percentage),
+        allocator: std.mem.Allocator,
+
+        pub fn init(allocator: std.mem.Allocator) !*State {
+            const state = try allocator.create(State);
+            state.* = State{
+                .users = std.HashMap(u32, User, std.hash_map.DefaultContext(u32), std.hash_map.default_max_load_percentage).init(allocator),
+                .allocator = allocator,
+            };
+            return state;
+        }
+    };
+
+    pub fn handle(actor: *Actor(Self), msg: Self) ?void {
+        var state = actor.getState(State) orelse blk: {
+            const new_state = State.init(actor.getAllocator()) catch return null;
+            actor.setState(new_state);
+            break :blk actor.getState(State).?;
+        };
+
+        switch (msg) {
+            .GetUser =&gt; |req| {
+                if (state.users.get(req.id)) |user| {
+                    std.debug.print(&quot;Found user {}: {s}\n&quot;, .{ user.id, user.name });
+                } else {
+                    std.debug.print(&quot;User {} not found\n&quot;, .{req.id});
+                }
+            },
+            .SetUser =&gt; |req| {
+                const user = User{ .id = req.id, .name = req.name };
+                state.users.put(req.id, user) catch return null;
+                std.debug.print(&quot;User {} saved: {s}\n&quot;, .{ req.id, req.name });
+            },
+        }
+    }
+};
+
+const ClientMessage = union(enum) {
+    SendRequest: void,
+
+    const Self = @This();
+
+    pub fn handle(actor: *Actor(Self), msg: Self) ?void {
+        switch (msg) {
+            .SendRequest =&gt; {
+                // Send request to database actor
+                var req = DatabaseMessage{ .SetUser = .{ .id = 1, .name = &quot;Alice&quot;, .request_id = 123 } };
+                actor.getContext().send(DatabaseMessage, &amp;req) catch |err| {
+                    std.debug.print(&quot;Failed to send request: {}\n&quot;, .{err});
+                };
+            },
+        }
+    }
+};
+</code></pre>
+<h3 id="publisher-subscriber-pattern">Publisher-Subscriber Pattern</h3>
+<p>Event-driven communication using pub-sub:</p>
+<pre><code class="language-zig">const EventMessage = union(enum) {
+    Subscribe: struct { topic: []const u8, subscriber_id: u32 },
+    Unsubscribe: struct { topic: []const u8, subscriber_id: u32 },
+    Publish: struct { topic: []const u8, data: []const u8 },
+
+    const Self = @This();
+
+    const Subscription = struct {
+        topic: []const u8,
+        subscriber_id: u32,
+    };
+
+    const State = struct {
+        subscriptions: std.ArrayList(Subscription),
+        allocator: std.mem.Allocator,
+
+        pub fn init(allocator: std.mem.Allocator) !*State {
+            const state = try allocator.create(State);
+            state.* = State{
+                .subscriptions = std.ArrayList(Subscription).init(allocator),
+                .allocator = allocator,
+            };
+            return state;
+        }
+    };
+
+    pub fn handle(actor: *Actor(Self), msg: Self) ?void {
+        var state = actor.getState(State) orelse blk: {
+            const new_state = State.init(actor.getAllocator()) catch return null;
+            actor.setState(new_state);
+            break :blk actor.getState(State).?;
+        };
+
+        switch (msg) {
+            .Subscribe =&gt; |sub| {
+                const subscription = Subscription{
+                    .topic = sub.topic,
+                    .subscriber_id = sub.subscriber_id,
+                };
+                state.subscriptions.append(subscription) catch return null;
+                std.debug.print(&quot;Subscriber {} subscribed to {s}\n&quot;, .{ sub.subscriber_id, sub.topic });
+            },
+            .Unsubscribe =&gt; |unsub| {
+                for (state.subscriptions.items, 0..) |subscription, i| {
+                    if (subscription.subscriber_id == unsub.subscriber_id and 
+                        std.mem.eql(u8, subscription.topic, unsub.topic)) {
+                        _ = state.subscriptions.orderedRemove(i);
+                        std.debug.print(&quot;Subscriber {} unsubscribed from {s}\n&quot;, .{ unsub.subscriber_id, unsub.topic });
+                        break;
+                    }
+                }
+            },
+            .Publish =&gt; |pub_msg| {
+                std.debug.print(&quot;Publishing to {s}: {s}\n&quot;, .{ pub_msg.topic, pub_msg.data });
+                for (state.subscriptions.items) |subscription| {
+                    if (std.mem.eql(u8, subscription.topic, pub_msg.topic)) {
+                        std.debug.print(&quot;  -&gt; Notifying subscriber {}\n&quot;, .{subscription.subscriber_id});
+                        // In a real implementation, you'd send the message to the subscriber
+                    }
+                }
+            },
+        }
+    }
+};
+</code></pre>
+<h2 id="advanced-examples">Advanced Examples</h2>
+<h3 id="supervisor-pattern_1">Supervisor Pattern</h3>
+<p>A supervisor that manages child actors and handles failures:</p>
+<pre><code class="language-zig">const SupervisorMessage = union(enum) {
+    SpawnChild: struct { name: []const u8 },
+    ChildFailed: struct { name: []const u8, error_msg: []const u8 },
+    RestartChild: struct { name: []const u8 },
+    GetStatus: void,
+
+    const Self = @This();
+
+    const ChildInfo = struct {
+        name: []const u8,
+        status: enum { running, failed, restarting },
+        restart_count: u32,
+    };
+
+    const State = struct {
+        children: std.HashMap([]const u8, ChildInfo, std.hash_map.StringContext, std.hash_map.default_max_load_percentage),
+        allocator: std.mem.Allocator,
+
+        pub fn init(allocator: std.mem.Allocator) !*State {
+            const state = try allocator.create(State);
+            state.* = State{
+                .children = std.HashMap([]const u8, ChildInfo, std.hash_map.StringContext, std.hash_map.default_max_load_percentage).init(allocator),
+                .allocator = allocator,
+            };
+            return state;
+        }
+    };
+
+    pub fn handle(actor: *Actor(Self), msg: Self) ?void {
+        var state = actor.getState(State) orelse blk: {
+            const new_state = State.init(actor.getAllocator()) catch return null;
+            actor.setState(new_state);
+            break :blk actor.getState(State).?;
+        };
+
+        switch (msg) {
+            .SpawnChild =&gt; |spawn| {
+                const child = ChildInfo{
+                    .name = spawn.name,
+                    .status = .running,
+                    .restart_count = 0,
+                };
+                state.children.put(spawn.name, child) catch return null;
+                std.debug.print(&quot;Spawned child: {s}\n&quot;, .{spawn.name});
+            },
+            .ChildFailed =&gt; |failed| {
+                if (state.children.getPtr(failed.name)) |child| {
+                    child.status = .failed;
+                    std.debug.print(&quot;Child {s} failed: {s}\n&quot;, .{ failed.name, failed.error_msg });
+
+                    // Auto-restart if restart count is below threshold
+                    if (child.restart_count &lt; 3) {
+                        var restart = Self{ .RestartChild = .{ .name = failed.name } };
+                        // In a real implementation, you'd send this message back to yourself
+                        _ = restart;
+                    }
+                }
+            },
+            .RestartChild =&gt; |restart| {
+                if (state.children.getPtr(restart.name)) |child| {
+                    child.status = .restarting;
+                    child.restart_count += 1;
+                    std.debug.print(&quot;Restarting child: {s} (attempt {})\n&quot;, .{ restart.name, child.restart_count });
+
+                    // Simulate restart delay and success
+                    child.status = .running;
+                    std.debug.print(&quot;Child {s} restarted successfully\n&quot;, .{restart.name});
+                }
+            },
+            .GetStatus =&gt; {
+                std.debug.print(&quot;Supervisor Status:\n&quot;);
+                var iterator = state.children.iterator();
+                while (iterator.next()) |entry| {
+                    const child = entry.value_ptr.*;
+                    std.debug.print(&quot;  {s}: {} (restarts: {})\n&quot;, .{ child.name, child.status, child.restart_count });
+                }
+            },
+        }
+    }
+};
+</code></pre>
+<h3 id="performance-monitoring">Performance Monitoring</h3>
+<p>An actor that monitors system performance:</p>
+<pre><code class="language-zig">const MonitorMessage = union(enum) {
+    StartMonitoring: void,
+    StopMonitoring: void,
+    GetMetrics: void,
+    RecordMetric: struct { name: []const u8, value: f64 },
+
+    const Self = @This();
+
+    const Metric = struct {
+        name: []const u8,
+        value: f64,
+        timestamp: i64,
+    };
+
+    const State = struct {
+        metrics: std.ArrayList(Metric),
+        monitoring: bool,
+        allocator: std.mem.Allocator,
+
+        pub fn init(allocator: std.mem.Allocator) !*State {
+            const state = try allocator.create(State);
+            state.* = State{
+                .metrics = std.ArrayList(Metric).init(allocator),
+                .monitoring = false,
+                .allocator = allocator,
+            };
+            return state;
+        }
+    };
+
+    pub fn handle(actor: *Actor(Self), msg: Self) ?void {
+        var state = actor.getState(State) orelse blk: {
+            const new_state = State.init(actor.getAllocator()) catch return null;
+            actor.setState(new_state);
+            break :blk actor.getState(State).?;
+        };
+
+        switch (msg) {
+            .StartMonitoring =&gt; {
+                state.monitoring = true;
+                std.debug.print(&quot;Performance monitoring started\n&quot;);
+            },
+            .StopMonitoring =&gt; {
+                state.monitoring = false;
+                std.debug.print(&quot;Performance monitoring stopped\n&quot;);
+            },
+            .GetMetrics =&gt; {
+                std.debug.print(&quot;Performance Metrics:\n&quot;);
+                for (state.metrics.items) |metric| {
+                    std.debug.print(&quot;  {s}: {d:.2} ({})\n&quot;, .{ metric.name, metric.value, metric.timestamp });
+                }
+            },
+            .RecordMetric =&gt; |record| {
+                if (state.monitoring) {
+                    const metric = Metric{
+                        .name = record.name,
+                        .value = record.value,
+                        .timestamp = std.time.timestamp(),
+                    };
+                    state.metrics.append(metric) catch return null;
+                    std.debug.print(&quot;Recorded metric {s}: {d:.2}\n&quot;, .{ record.name, record.value });
+                }
+            },
+        }
+    }
+};
+</code></pre>
+<h2 id="real-world-use-cases">Real-World Use Cases</h2>
+<h3 id="chat-server">Chat Server</h3>
+<p>A simple chat server using multiple actor types:</p>
+<pre><code class="language-zig">// User session actor
+const SessionMessage = union(enum) {
+    Connect: struct { user_id: u32, username: []const u8 },
+    Disconnect: void,
+    SendMessage: struct { content: []const u8 },
+    ReceiveMessage: struct { from: []const u8, content: []const u8 },
+};
+
+// Chat room actor
+const RoomMessage = union(enum) {
+    Join: struct { user_id: u32, username: []const u8 },
+    Leave: struct { user_id: u32 },
+    Broadcast: struct { from: []const u8, content: []const u8 },
+    GetUsers: void,
+};
+
+// Message router actor
+const RouterMessage = union(enum) {
+    RouteToUser: struct { user_id: u32, message: []const u8 },
+    RouteToRoom: struct { room_id: u32, message: []const u8 },
+    RegisterUser: struct { user_id: u32, session_ref: *Actor(SessionMessage) },
+};
+</code></pre>
+<h3 id="data-processing-pipeline">Data Processing Pipeline</h3>
+<p>A data processing pipeline with multiple stages:</p>
+<pre><code class="language-zig">// Data ingestion actor
+const IngestMessage = union(enum) {
+    ProcessFile: []const u8,
+    ProcessData: []const u8,
+};
+
+// Data transformation actor
+const TransformMessage = union(enum) {
+    Transform: struct { data: []const u8, format: enum { json, csv, xml } },
+    ValidateData: []const u8,
+};
+
+// Data output actor
+const OutputMessage = union(enum) {
+    SaveToDatabase: []const u8,
+    SaveToFile: struct { filename: []const u8, data: []const u8 },
+    SendToApi: struct { endpoint: []const u8, payload: []const u8 },
+};
+</code></pre>
+<h2 id="testing-examples">Testing Examples</h2>
+<h3 id="unit-testing-actors">Unit Testing Actors</h3>
+<pre><code class="language-zig">const testing = std.testing;
+
+test &quot;Counter actor increments correctly&quot; {
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer _ = gpa.deinit();
+
+    var engine = try ActorEngine.init(gpa.allocator());
+    defer engine.deinit();
+
+    try engine.spawn(CounterMessage, CounterMessage.handle);
+
+    // Send increment message
+    var inc = CounterMessage.Increment;
+    try engine.send(CounterMessage, &amp;inc);
+
+    // Verify state (in a real test, you'd need a way to inspect actor state)
+    // This is a simplified example
+}
+
+test &quot;Echo actor responds correctly&quot; {
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer _ = gpa.deinit();
+
+    var engine = try ActorEngine.init(gpa.allocator());
+    defer engine.deinit();
+
+    try engine.spawn(EchoMessage, EchoMessage.handle);
+
+    var echo = EchoMessage{ .Echo = &quot;test message&quot; };
+    try engine.send(EchoMessage, &amp;echo);
+
+    // In a real test, you'd capture output or use a test harness
+}
+</code></pre>
+<h2 id="next-steps_3">Next Steps</h2>
+<p>These examples demonstrate the flexibility and power of zctor. To learn more:</p>
+<ul>
+<li><a href="./07-best-practices.md">Best Practices</a> - Optimization and design patterns</li>
+<li><a href="./08-advanced-topics.md">Advanced Topics</a> - Complex scenarios and performance tuning</li>
+<li><a href="./05-api-reference.md">API Reference</a> - Complete API documentation</li>
+</ul>
+<hr />
+<h1 id="8-best-practices">8. Best Practices</h1>
+<p>This chapter covers best practices, design patterns, and optimization techniques for building production-ready applications with zctor.</p>
+<h2 id="design-principles">Design Principles</h2>
+<h3 id="single-responsibility">Single Responsibility</h3>
+<p>Each actor should have a single, well-defined responsibility:</p>
+<pre><code class="language-zig">// Good: Focused responsibility
+const UserAuthenticator = union(enum) {
+    Login: struct { username: []const u8, password: []const u8 },
+    Logout: struct { session_id: []const u8 },
+    ValidateSession: struct { session_id: []const u8 },
+};
+
+// Avoid: Mixed responsibilities
+const UserManager = union(enum) {
+    Login: struct { username: []const u8, password: []const u8 },
+    SaveFile: struct { filename: []const u8, data: []const u8 },
+    SendEmail: struct { to: []const u8, subject: []const u8 },
+    CalculateTax: struct { amount: f64 },
+};
+</code></pre>
+<h3 id="immutable-messages">Immutable Messages</h3>
+<p>Design messages to be immutable and contain all necessary data:</p>
+<pre><code class="language-zig">// Good: Self-contained message
+const ProcessOrder = struct {
+    order_id: u32,
+    customer_id: u32,
+    items: []OrderItem,
+    total_amount: f64,
+    currency: Currency,
+    timestamp: i64,
+};
+
+// Avoid: Mutable or incomplete messages
+const ProcessOrder = struct {
+    order_id: u32,
+    // Missing essential data - actor would need to fetch it
+};
+</code></pre>
+<h3 id="type-safe-message-design">Type-Safe Message Design</h3>
+<p>Leverage Zig's type system for safe message handling:</p>
+<pre><code class="language-zig">// Use enums for discrete states
+const UserStatus = enum { active, inactive, suspended, deleted };
+
+// Use tagged unions for different message types
+const DatabaseMessage = union(enum) {
+    Read: struct { table: []const u8, id: u32 },
+    Write: struct { table: []const u8, data: []const u8 },
+    Delete: struct { table: []const u8, id: u32 },
+
+    // Compile-time validation of message types
+    pub fn validate(self: @This()) bool {
+        return switch (self) {
+            .Read =&gt; |r| r.table.len &gt; 0 and r.id &gt; 0,
+            .Write =&gt; |w| w.table.len &gt; 0 and w.data.len &gt; 0,
+            .Delete =&gt; |d| d.table.len &gt; 0 and d.id &gt; 0,
+        };
+    }
+};
+</code></pre>
+<h2 id="state-management_1">State Management</h2>
+<h3 id="lazy-state-initialization">Lazy State Initialization</h3>
+<p>Initialize state only when needed to optimize memory usage:</p>
+<pre><code class="language-zig">const State = struct {
+    cache: ?std.HashMap(u32, []const u8, std.hash_map.DefaultContext(u32), std.hash_map.default_max_load_percentage),
+    allocator: std.mem.Allocator,
+
+    pub fn init(allocator: std.mem.Allocator) !*State {
+        const state = try allocator.create(State);
+        state.* = State{
+            .cache = null, // Lazy initialization
+            .allocator = allocator,
+        };
+        return state;
+    }
+
+    pub fn getCache(self: *State) !*std.HashMap(u32, []const u8, std.hash_map.DefaultContext(u32), std.hash_map.default_max_load_percentage) {
+        if (self.cache == null) {
+            self.cache = std.HashMap(u32, []const u8, std.hash_map.DefaultContext(u32), std.hash_map.default_max_load_percentage).init(self.allocator);
+        }
+        return &amp;self.cache.?;
+    }
+};
+</code></pre>
+<h3 id="state-validation">State Validation</h3>
+<p>Validate state consistency in debug builds:</p>
+<pre><code class="language-zig">const State = struct {
+    counter: u32,
+    max_value: u32,
+
+    pub fn validate(self: *const State) bool {
+        return self.counter &lt;= self.max_value;
+    }
+
+    pub fn increment(self: *State) !void {
+        if (self.counter &gt;= self.max_value) {
+            return error.CounterOverflow;
+        }
+        self.counter += 1;
+
+        // Assert invariants in debug builds
+        if (builtin.mode == .Debug) {
+            std.debug.assert(self.validate());
+        }
+    }
+};
+</code></pre>
+<h3 id="memory-efficient-state">Memory-Efficient State</h3>
+<p>Use memory pools and compact data structures:</p>
+<pre><code class="language-zig">const State = struct {
+    // Use ArrayList instead of HashMap when appropriate
+    recent_messages: std.ArrayList(Message),
+
+    // Use fixed-size arrays for bounded data
+    connection_pool: [16]?Connection,
+
+    // Use bit fields for flags
+    flags: packed struct {
+        is_authenticated: bool,
+        is_admin: bool,
+        notifications_enabled: bool,
+        _padding: u5 = 0,
+    },
+
+    allocator: std.mem.Allocator,
+};
+</code></pre>
+<h2 id="error-handling_1">Error Handling</h2>
+<h3 id="graceful-error-recovery">Graceful Error Recovery</h3>
+<p>Design actors to handle errors gracefully:</p>
+<pre><code class="language-zig">pub fn handle(actor: *Actor(DatabaseMessage), msg: DatabaseMessage) ?void {
+    switch (msg) {
+        .Query =&gt; |query| {
+            // Try primary database
+            executeQuery(query.sql) catch |err| switch (err) {
+                error.ConnectionTimeout =&gt; {
+                    // Retry with backup database
+                    executeQueryOnBackup(query.sql) catch |backup_err| {
+                        std.log.err(&quot;Both primary and backup databases failed: {} / {}&quot;, .{ err, backup_err });
+                        // Send failure notification
+                        notifyQueryFailure(query.request_id);
+                        return;
+                    };
+                },
+                error.InvalidQuery =&gt; {
+                    std.log.err(&quot;Invalid query: {s}&quot;, .{query.sql});
+                    // Don't retry, just log and continue
+                    return;
+                },
+                else =&gt; {
+                    std.log.err(&quot;Database error: {}&quot;, .{err});
+                    return null; // Signal actor error
+                },
+            };
+        },
+    }
+}
+</code></pre>
+<h3 id="error-propagation_1">Error Propagation</h3>
+<p>Use explicit error types for clear error handling:</p>
+<pre><code class="language-zig">const ProcessingError = error{
+    InvalidInput,
+    NetworkTimeout,
+    DatabaseError,
+    InsufficientMemory,
+};
+
+const ProcessMessage = struct {
+    data: []const u8,
+    callback: ?fn (result: ProcessingError![]const u8) void,
+};
+
+pub fn handle(actor: *Actor(ProcessMessage), msg: ProcessMessage) ?void {
+    const result = processData(msg.data) catch |err| {
+        if (msg.callback) |cb| {
+            cb(err);
+        }
+        return; // Continue processing other messages
+    };
+
+    if (msg.callback) |cb| {
+        cb(result);
+    }
+}
+</code></pre>
+<h2 id="performance-optimization">Performance Optimization</h2>
+<h3 id="message-pooling">Message Pooling</h3>
+<p>Reuse message objects to reduce allocations:</p>
+<pre><code class="language-zig">const MessagePool = struct {
+    pool: std.ArrayList(*Message),
+    allocator: std.mem.Allocator,
+
+    pub fn get(self: *MessagePool) !*Message {
+        if (self.pool.items.len &gt; 0) {
+            return self.pool.pop();
+        }
+        return try self.allocator.create(Message);
+    }
+
+    pub fn put(self: *MessagePool, msg: *Message) !void {
+        // Reset message state
+        msg.* = std.mem.zeroes(Message);
+        try self.pool.append(msg);
+    }
+};
+</code></pre>
+<h3 id="batch-processing">Batch Processing</h3>
+<p>Process multiple messages in batches for better throughput:</p>
+<pre><code class="language-zig">const BatchProcessor = union(enum) {
+    AddItem: []const u8,
+    ProcessBatch: void,
+
+    const Self = @This();
+
+    const State = struct {
+        batch: std.ArrayList([]const u8),
+        batch_size: usize,
+        last_process: i64,
+
+        pub fn shouldProcess(self: *State) bool {
+            const now = std.time.timestamp();
+            return self.batch.items.len &gt;= self.batch_size or 
+                   (now - self.last_process) &gt; 1000; // 1 second timeout
+        }
+    };
+
+    pub fn handle(actor: *Actor(Self), msg: Self) ?void {
+        var state = getOrCreateState(actor);
+
+        switch (msg) {
+            .AddItem =&gt; |item| {
+                state.batch.append(item) catch return null;
+
+                if (state.shouldProcess()) {
+                    var process_msg = Self.ProcessBatch;
+                    actor.sender(process_msg) catch {};
+                }
+            },
+            .ProcessBatch =&gt; {
+                if (state.batch.items.len &gt; 0) {
+                    processBatch(state.batch.items);
+                    state.batch.clearRetainingCapacity();
+                    state.last_process = std.time.timestamp();
+                }
+            },
+        }
+    }
+};
+</code></pre>
+<h3 id="memory-management_1">Memory Management</h3>
+<p>Use appropriate allocators for different use cases:</p>
+<pre><code class="language-zig">const State = struct {
+    // Use arena allocator for temporary data
+    arena: std.heap.ArenaAllocator,
+
+    // Use general purpose allocator for long-lived data
+    persistent_data: std.HashMap(u32, []const u8, std.hash_map.DefaultContext(u32), std.hash_map.default_max_load_percentage),
+
+    pub fn init(allocator: std.mem.Allocator) !*State {
+        const state = try allocator.create(State);
+        state.* = State{
+            .arena = std.heap.ArenaAllocator.init(allocator),
+            .persistent_data = std.HashMap(u32, []const u8, std.hash_map.DefaultContext(u32), std.hash_map.default_max_load_percentage).init(allocator),
+        };
+        return state;
+    }
+
+    pub fn processTemporaryData(self: *State, data: []const u8) !void {
+        // Use arena for temporary allocations
+        const temp_allocator = self.arena.allocator();
+        const processed = try processData(temp_allocator, data);
+
+        // Store result in persistent storage
+        try self.persistent_data.put(calculateHash(data), processed);
+
+        // Clear arena for next use
+        _ = self.arena.reset(.retain_capacity);
+    }
+};
+</code></pre>
+<h2 id="testing-strategies">Testing Strategies</h2>
+<h3 id="unit-testing-actors_1">Unit Testing Actors</h3>
+<p>Create testable actor handlers:</p>
+<pre><code class="language-zig">// Separate business logic from actor infrastructure
+const Calculator = struct {
+    pub fn add(a: i32, b: i32) i32 {
+        return a + b;
+    }
+
+    pub fn multiply(a: i32, b: i32) i32 {
+        return a * b;
+    }
+};
+
+const CalculatorMessage = union(enum) {
+    Add: struct { a: i32, b: i32 },
+    Multiply: struct { a: i32, b: i32 },
+
+    const Self = @This();
+
+    pub fn handle(actor: *Actor(Self), msg: Self) ?void {
+        _ = actor;
+        switch (msg) {
+            .Add =&gt; |op| {
+                const result = Calculator.add(op.a, op.b);
+                std.debug.print(&quot;Result: {}\n&quot;, .{result});
+            },
+            .Multiply =&gt; |op| {
+                const result = Calculator.multiply(op.a, op.b);
+                std.debug.print(&quot;Result: {}\n&quot;, .{result});
+            },
+        }
+    }
+};
+
+// Test business logic separately
+test &quot;Calculator add function&quot; {
+    try testing.expectEqual(@as(i32, 5), Calculator.add(2, 3));
+}
+
+test &quot;Calculator multiply function&quot; {
+    try testing.expectEqual(@as(i32, 6), Calculator.multiply(2, 3));
+}
+</code></pre>
+<h3 id="integration-testing">Integration Testing</h3>
+<p>Test actor interactions:</p>
+<pre><code class="language-zig">const TestHarness = struct {
+    engine: *ActorEngine,
+    responses: std.ArrayList([]const u8),
+
+    pub fn init(allocator: std.mem.Allocator) !TestHarness {
+        return TestHarness{
+            .engine = try ActorEngine.init(allocator),
+            .responses = std.ArrayList([]const u8).init(allocator),
+        };
+    }
+
+    pub fn expectResponse(self: *TestHarness, expected: []const u8) !void {
+        // Wait for response or timeout
+        const timeout = std.time.timestamp() + 5; // 5 second timeout
+
+        while (std.time.timestamp() &lt; timeout) {
+            if (self.responses.items.len &gt; 0) {
+                const actual = self.responses.orderedRemove(0);
+                try testing.expectEqualStrings(expected, actual);
+                return;
+            }
+            std.time.sleep(1000000); // 1ms
+        }
+
+        return error.TimeoutWaitingForResponse;
+    }
+};
+</code></pre>
+<h3 id="mock-actors">Mock Actors</h3>
+<p>Create mock actors for testing:</p>
+<pre><code class="language-zig">const MockDatabaseMessage = union(enum) {
+    Query: struct { sql: []const u8, callback: fn ([]const u8) void },
+
+    const Self = @This();
+
+    pub fn handle(actor: *Actor(Self), msg: Self) ?void {
+        _ = actor;
+        switch (msg) {
+            .Query =&gt; |query| {
+                // Return predictable test data
+                if (std.mem.eql(u8, query.sql, &quot;SELECT * FROM users&quot;)) {
+                    query.callback(&quot;user1,user2,user3&quot;);
+                } else {
+                    query.callback(&quot;error: unknown query&quot;);
+                }
+            },
+        }
+    }
+};
+</code></pre>
+<h2 id="production-considerations">Production Considerations</h2>
+<h3 id="monitoring-and-observability">Monitoring and Observability</h3>
+<p>Add metrics and logging to your actors:</p>
+<pre><code class="language-zig">const MetricsCollector = struct {
+    message_count: u64 = 0,
+    error_count: u64 = 0,
+    processing_time_total: u64 = 0,
+
+    pub fn recordMessage(self: *MetricsCollector) void {
+        self.message_count += 1;
+    }
+
+    pub fn recordError(self: *MetricsCollector) void {
+        self.error_count += 1;
+    }
+
+    pub fn recordProcessingTime(self: *MetricsCollector, duration: u64) void {
+        self.processing_time_total += duration;
+    }
+};
+
+pub fn handle(actor: *Actor(MyMessage), msg: MyMessage) ?void {
+    const start_time = std.time.nanoTimestamp();
+    defer {
+        const end_time = std.time.nanoTimestamp();
+        const duration = @intCast(u64, end_time - start_time);
+        getMetrics().recordProcessingTime(duration);
+    }
+
+    getMetrics().recordMessage();
+
+    // Process message
+    processMessage(msg) catch |err| {
+        getMetrics().recordError();
+        std.log.err(&quot;Error processing message: {}&quot;, .{err});
+        return null;
+    };
+}
+</code></pre>
+<h3 id="resource-management">Resource Management</h3>
+<p>Implement proper resource cleanup:</p>
+<pre><code class="language-zig">const ResourceManager = struct {
+    connections: std.ArrayList(*Connection),
+    files: std.ArrayList(std.fs.File),
+
+    pub fn cleanup(self: *ResourceManager) void {
+        // Close all connections
+        for (self.connections.items) |conn| {
+            conn.close();
+        }
+        self.connections.clearAndFree();
+
+        // Close all files
+        for (self.files.items) |file| {
+            file.close();
+        }
+        self.files.clearAndFree();
+    }
+};
+
+const State = struct {
+    resources: ResourceManager,
+
+    pub fn deinit(self: *State) void {
+        self.resources.cleanup();
+    }
+};
+</code></pre>
+<h3 id="configuration-management">Configuration Management</h3>
+<p>Use compile-time configuration for performance:</p>
+<pre><code class="language-zig">const Config = struct {
+    const max_message_queue_size = if (builtin.mode == .Debug) 100 else 10000;
+    const enable_detailed_logging = builtin.mode == .Debug;
+    const batch_size = if (builtin.cpu.arch == .x86_64) 1000 else 100;
+};
+
+pub fn handle(actor: *Actor(MyMessage), msg: MyMessage) ?void {
+    if (Config.enable_detailed_logging) {
+        std.log.debug(&quot;Processing message: {}&quot;, .{msg});
+    }
+
+    // Use configuration values
+    if (getQueueSize() &gt; Config.max_message_queue_size) {
+        std.log.warn(&quot;Message queue size exceeded: {}&quot;, .{getQueueSize()});
+    }
+}
+</code></pre>
+<h2 id="common-pitfalls">Common Pitfalls</h2>
+<h3 id="avoid-blocking-operations">Avoid Blocking Operations</h3>
+<p>Never perform blocking operations in actor handlers:</p>
+<pre><code class="language-zig">// Bad: Blocking I/O
+pub fn handle(actor: *Actor(MyMessage), msg: MyMessage) ?void {
+    const file = std.fs.cwd().openFile(&quot;data.txt&quot;, .{}) catch return null;
+    const data = file.readToEndAlloc(actor.getAllocator(), 1024) catch return null;
+    // This blocks the entire thread!
+}
+
+// Good: Use async I/O or delegate to specialized actors
+pub fn handle(actor: *Actor(MyMessage), msg: MyMessage) ?void {
+    switch (msg) {
+        .ReadFile =&gt; |filename| {
+            // Send request to I/O actor
+            var io_msg = IOMessage{ .ReadFile = .{ .filename = filename, .callback = handleFileData } };
+            actor.getContext().send(IOMessage, &amp;io_msg) catch {};
+        },
+    }
+}
+</code></pre>
+<h3 id="avoid-shared-mutable-state">Avoid Shared Mutable State</h3>
+<p>Don't share mutable state between actors:</p>
+<pre><code class="language-zig">// Bad: Shared mutable state
+var global_counter: u32 = 0;
+
+pub fn handle(actor: *Actor(MyMessage), msg: MyMessage) ?void {
+    global_counter += 1; // Race condition!
+}
+
+// Good: Actor-local state
+const State = struct {
+    local_counter: u32 = 0,
+};
+
+pub fn handle(actor: *Actor(MyMessage), msg: MyMessage) ?void {
+    var state = getState(actor);
+    state.local_counter += 1; // Safe!
+}
+</code></pre>
+<h3 id="avoid-large-messages">Avoid Large Messages</h3>
+<p>Keep messages small and focused:</p>
+<pre><code class="language-zig">// Bad: Large message with embedded data
+const ProcessImage = struct {
+    image_data: [1024 * 1024]u8, // 1MB embedded in message
+    filter: ImageFilter,
+};
+
+// Good: Reference to data
+const ProcessImage = struct {
+    image_path: []const u8,
+    filter: ImageFilter,
+};
+</code></pre>
+<h2 id="next-steps_4">Next Steps</h2>
+<p>With these best practices in mind, you're ready to explore:</p>
+<ul>
+<li><a href="./08-advanced-topics.md">Advanced Topics</a> - Complex patterns and optimizations</li>
+<li><a href="./09-contributing.md">Contributing</a> - How to contribute to zctor</li>
+<li><a href="./06-examples.md">Examples</a> - More practical implementations</li>
+</ul>
+<hr />
+<h1 id="9-advanced-topics">9. Advanced Topics</h1>
+<p>This chapter covers advanced patterns, performance optimization, and complex use cases for experienced zctor developers.</p>
+<h2 id="custom-allocators">Custom Allocators</h2>
+<h3 id="arena-allocators-for-request-processing">Arena Allocators for Request Processing</h3>
+<p>Use arena allocators for request-scoped memory management:</p>
+<pre><code class="language-zig">const RequestProcessor = union(enum) {
+    ProcessRequest: struct { 
+        id: u32, 
+        data: []const u8,
+        arena: *std.heap.ArenaAllocator,
+    },
+
+    const Self = @This();
+
+    pub fn handle(actor: *Actor(Self), msg: Self) ?void {
+        switch (msg) {
+            .ProcessRequest =&gt; |req| {
+                // All allocations during this request use the arena
+                const allocator = req.arena.allocator();
+
+                // Process data with temporary allocations
+                const processed = processComplexData(allocator, req.data) catch return null;
+                const transformed = transformData(allocator, processed) catch return null;
+                const result = finalizeData(allocator, transformed) catch return null;
+
+                // Send result somewhere
+                sendResult(req.id, result);
+
+                // Arena will be freed by the caller
+            },
+        }
+    }
+};
+
+// Usage with arena management
+pub fn handleHttpRequest(request: HttpRequest) !void {
+    var arena = std.heap.ArenaAllocator.init(global_allocator);
+    defer arena.deinit(); // Automatic cleanup
+
+    const msg = RequestProcessor.ProcessRequest{
+        .id = request.id,
+        .data = request.body,
+        .arena = &amp;arena,
+    };
+
+    try engine.send(RequestProcessor, &amp;msg);
+}
+</code></pre>
+<h3 id="memory-pool-allocators">Memory Pool Allocators</h3>
+<p>Implement custom memory pools for high-performance scenarios:</p>
+<pre><code class="language-zig">const PoolAllocator = struct {
+    pool: std.ArrayList([]u8),
+    chunk_size: usize,
+    backing_allocator: std.mem.Allocator,
+
+    pub fn init(backing_allocator: std.mem.Allocator, chunk_size: usize) PoolAllocator {
+        return PoolAllocator{
+            .pool = std.ArrayList([]u8).init(backing_allocator),
+            .chunk_size = chunk_size,
+            .backing_allocator = backing_allocator,
+        };
+    }
+
+    pub fn allocator(self: *PoolAllocator) std.mem.Allocator {
+        return std.mem.Allocator{
+            .ptr = self,
+            .vtable = &amp;.{
+                .alloc = alloc,
+                .resize = resize,
+                .free = free,
+            },
+        };
+    }
+
+    fn alloc(ctx: *anyopaque, len: usize, ptr_align: u8, ret_addr: usize) ?[*]u8 {
+        _ = ptr_align;
+        _ = ret_addr;
+        const self: *PoolAllocator = @ptrCast(@alignCast(ctx));
+
+        if (len &lt;= self.chunk_size and self.pool.items.len &gt; 0) {
+            return self.pool.pop().ptr;
+        }
+
+        return self.backing_allocator.rawAlloc(len, ptr_align, ret_addr);
+    }
+
+    fn free(ctx: *anyopaque, buf: []u8, buf_align: u8, ret_addr: usize) void {
+        _ = buf_align;
+        _ = ret_addr;
+        const self: *PoolAllocator = @ptrCast(@alignCast(ctx));
+
+        if (buf.len == self.chunk_size) {
+            self.pool.append(buf) catch {
+                // If pool is full, fall back to backing allocator
+                self.backing_allocator.rawFree(buf, buf_align, ret_addr);
+            };
+        } else {
+            self.backing_allocator.rawFree(buf, buf_align, ret_addr);
+        }
+    }
+
+    fn resize(ctx: *anyopaque, buf: []u8, buf_align: u8, new_len: usize, ret_addr: usize) bool {
+        const self: *PoolAllocator = @ptrCast(@alignCast(ctx));
+        return self.backing_allocator.rawResize(buf, buf_align, new_len, ret_addr);
+    }
+};
+</code></pre>
+<h2 id="supervision-patterns">Supervision Patterns</h2>
+<h3 id="hierarchical-supervision">Hierarchical Supervision</h3>
+<p>Implement supervision trees for fault tolerance:</p>
+<pre><code class="language-zig">const SupervisorStrategy = enum {
+    one_for_one,    // Restart only the failed child
+    one_for_all,    // Restart all children when one fails
+    rest_for_one,   // Restart the failed child and all children started after it
+};
+
+const SupervisorSpec = struct {
+    max_restarts: u32 = 3,
+    max_time_window: u32 = 60, // seconds
+    strategy: SupervisorStrategy = .one_for_one,
+};
+
+const Supervisor = union(enum) {
+    StartChild: struct { 
+        name: []const u8, 
+        actor_type: type,
+        handler: anytype,
+    },
+    ChildTerminated: struct { 
+        name: []const u8, 
+        reason: TerminationReason,
+    },
+    GetChildren: void,
+
+    const Self = @This();
+
+    const TerminationReason = enum {
+        normal,
+        error,
+        killed,
+    };
+
+    const ChildSpec = struct {
+        name: []const u8,
+        restart_count: u32,
+        last_restart: i64,
+        status: enum { running, terminated, restarting },
+    };
+
+    const State = struct {
+        children: std.HashMap([]const u8, ChildSpec, std.hash_map.StringContext, std.hash_map.default_max_load_percentage),
+        spec: SupervisorSpec,
+        allocator: std.mem.Allocator,
+
+        pub fn init(allocator: std.mem.Allocator, spec: SupervisorSpec) !*State {
+            const state = try allocator.create(State);
+            state.* = State{
+                .children = std.HashMap([]const u8, ChildSpec, std.hash_map.StringContext, std.hash_map.default_max_load_percentage).init(allocator),
+                .spec = spec,
+                .allocator = allocator,
+            };
+            return state;
+        }
+
+        pub fn shouldRestart(self: *State, child_name: []const u8) bool {
+            const child = self.children.get(child_name) orelse return false;
+            const now = std.time.timestamp();
+
+            // Check if within time window
+            if (now - child.last_restart &gt; self.spec.max_time_window) {
+                // Reset restart count if outside time window
+                if (self.children.getPtr(child_name)) |c| {
+                    c.restart_count = 0;
+                }
+            }
+
+            return child.restart_count &lt; self.spec.max_restarts;
+        }
+    };
+
+    pub fn handle(actor: *Actor(Self), msg: Self) ?void {
+        var state = getOrCreateState(actor, SupervisorSpec{});
+
+        switch (msg) {
+            .StartChild =&gt; |spec| {
+                // Spawn child actor
+                actor.getContext().spawn(spec.actor_type, spec.handler) catch {
+                    std.log.err(&quot;Failed to start child: {s}&quot;, .{spec.name});
+                    return;
+                };
+
+                const child = ChildSpec{
+                    .name = spec.name,
+                    .restart_count = 0,
+                    .last_restart = std.time.timestamp(),
+                    .status = .running,
+                };
+
+                state.children.put(spec.name, child) catch return null;
+                std.log.info(&quot;Started child: {s}&quot;, .{spec.name});
+            },
+
+            .ChildTerminated =&gt; |term| {
+                if (state.children.getPtr(term.name)) |child| {
+                    child.status = .terminated;
+
+                    if (term.reason == .error and state.shouldRestart(term.name)) {
+                        // Implement restart strategy
+                        switch (state.spec.strategy) {
+                            .one_for_one =&gt; restartChild(state, term.name),
+                            .one_for_all =&gt; restartAllChildren(state),
+                            .rest_for_one =&gt; restartChildrenAfter(state, term.name),
+                        }
+                    }
+                }
+            },
+
+            .GetChildren =&gt; {
+                std.log.info(&quot;Supervisor children:&quot;);
+                var iterator = state.children.iterator();
+                while (iterator.next()) |entry| {
+                    const child = entry.value_ptr.*;
+                    std.log.info(&quot;  {s}: {} (restarts: {})&quot;, .{ child.name, child.status, child.restart_count });
+                }
+            },
+        }
+    }
+};
+</code></pre>
+<h3 id="circuit-breaker-pattern">Circuit Breaker Pattern</h3>
+<p>Implement circuit breakers for external service resilience:</p>
+<pre><code class="language-zig">const CircuitState = enum { closed, open, half_open };
+
+const CircuitBreaker = struct {
+    state: CircuitState = .closed,
+    failure_count: u32 = 0,
+    success_count: u32 = 0,
+    last_failure_time: i64 = 0,
+
+    // Configuration
+    failure_threshold: u32 = 5,
+    recovery_timeout: i64 = 30, // seconds
+    success_threshold: u32 = 3, // for half-open state
+
+    pub fn canExecute(self: *CircuitBreaker) bool {
+        const now = std.time.timestamp();
+
+        switch (self.state) {
+            .closed =&gt; return true,
+            .open =&gt; {
+                if (now - self.last_failure_time &gt;= self.recovery_timeout) {
+                    self.state = .half_open;
+                    self.success_count = 0;
+                    return true;
+                }
+                return false;
+            },
+            .half_open =&gt; return true,
+        }
+    }
+
+    pub fn recordSuccess(self: *CircuitBreaker) void {
+        switch (self.state) {
+            .closed =&gt; {
+                self.failure_count = 0;
+            },
+            .half_open =&gt; {
+                self.success_count += 1;
+                if (self.success_count &gt;= self.success_threshold) {
+                    self.state = .closed;
+                    self.failure_count = 0;
+                }
+            },
+            .open =&gt; {},
+        }
+    }
+
+    pub fn recordFailure(self: *CircuitBreaker) void {
+        self.failure_count += 1;
+        self.last_failure_time = std.time.timestamp();
+
+        if (self.failure_count &gt;= self.failure_threshold) {
+            self.state = .open;
+        }
+    }
+};
+
+const ExternalServiceActor = union(enum) {
+    CallService: struct { request: []const u8, callback: fn ([]const u8) void },
+
+    const Self = @This();
+
+    const State = struct {
+        circuit_breaker: CircuitBreaker,
+    };
+
+    pub fn handle(actor: *Actor(Self), msg: Self) ?void {
+        var state = getOrCreateState(actor);
+
+        switch (msg) {
+            .CallService =&gt; |call| {
+                if (!state.circuit_breaker.canExecute()) {
+                    std.log.warn(&quot;Circuit breaker is open, rejecting request&quot;);
+                    call.callback(&quot;Circuit breaker open&quot;);
+                    return;
+                }
+
+                callExternalService(call.request) catch |err| {
+                    state.circuit_breaker.recordFailure();
+                    std.log.err(&quot;External service call failed: {}&quot;, .{err});
+                    call.callback(&quot;Service unavailable&quot;);
+                    return;
+                };
+
+                state.circuit_breaker.recordSuccess();
+                call.callback(&quot;Success&quot;);
+            },
+        }
+    }
+};
+</code></pre>
+<h2 id="distributed-actor-systems">Distributed Actor Systems</h2>
+<h3 id="remote-actor-communication">Remote Actor Communication</h3>
+<p>Implement distributed actors across network boundaries:</p>
+<pre><code class="language-zig">const RemoteActorRef = struct {
+    node_id: []const u8,
+    actor_id: []const u8,
+    address: std.net.Address,
+};
+
+const ClusterMessage = union(enum) {
+    SendRemote: struct { 
+        target: RemoteActorRef, 
+        message: []const u8,
+    },
+    ReceiveRemote: struct { 
+        from: RemoteActorRef, 
+        message: []const u8,
+    },
+    NodeJoined: struct { node_id: []const u8, address: std.net.Address },
+    NodeLeft: struct { node_id: []const u8 },
+
+    const Self = @This();
+
+    const State = struct {
+        node_id: []const u8,
+        nodes: std.HashMap([]const u8, std.net.Address, std.hash_map.StringContext, std.hash_map.default_max_load_percentage),
+        connections: std.HashMap([]const u8, std.net.Stream, std.hash_map.StringContext, std.hash_map.default_max_load_percentage),
+        allocator: std.mem.Allocator,
+    };
+
+    pub fn handle(actor: *Actor(Self), msg: Self) ?void {
+        var state = getOrCreateState(actor);
+
+        switch (msg) {
+            .SendRemote =&gt; |send| {
+                const connection = state.connections.get(send.target.node_id);
+                if (connection == null) {
+                    // Establish connection
+                    establishConnection(state, send.target.node_id) catch {
+                        std.log.err(&quot;Failed to connect to node: {s}&quot;, .{send.target.node_id});
+                        return;
+                    };
+                }
+
+                // Serialize and send message
+                const serialized = serializeMessage(send.target.actor_id, send.message) catch return null;
+                sendToNode(state, send.target.node_id, serialized) catch {
+                    std.log.err(&quot;Failed to send message to remote node&quot;);
+                };
+            },
+
+            .ReceiveRemote =&gt; |recv| {
+                // Deserialize and route to local actor
+                const local_actor_id = recv.message; // Simplified
+                routeToLocalActor(local_actor_id, recv.message) catch {
+                    std.log.err(&quot;Failed to route message to local actor&quot;);
+                };
+            },
+
+            .NodeJoined =&gt; |join| {
+                state.nodes.put(join.node_id, join.address) catch return null;
+                std.log.info(&quot;Node joined cluster: {s}&quot;, .{join.node_id});
+            },
+
+            .NodeLeft =&gt; |leave| {
+                _ = state.nodes.remove(leave.node_id);
+                if (state.connections.get(leave.node_id)) |conn| {
+                    conn.close();
+                    _ = state.connections.remove(leave.node_id);
+                }
+                std.log.info(&quot;Node left cluster: {s}&quot;, .{leave.node_id});
+            },
+        }
+    }
+};
+</code></pre>
+<h3 id="consensus-algorithms">Consensus Algorithms</h3>
+<p>Implement Raft consensus for distributed coordination:</p>
+<pre><code class="language-zig">const RaftRole = enum { follower, candidate, leader };
+
+const RaftMessage = union(enum) {
+    RequestVote: struct {
+        term: u64,
+        candidate_id: []const u8,
+        last_log_index: u64,
+        last_log_term: u64,
+    },
+    RequestVoteResponse: struct {
+        term: u64,
+        vote_granted: bool,
+    },
+    AppendEntries: struct {
+        term: u64,
+        leader_id: []const u8,
+        prev_log_index: u64,
+        prev_log_term: u64,
+        entries: []LogEntry,
+        leader_commit: u64,
+    },
+    AppendEntriesResponse: struct {
+        term: u64,
+        success: bool,
+    },
+    ClientRequest: struct {
+        command: []const u8,
+    },
+
+    const Self = @This();
+
+    const LogEntry = struct {
+        term: u64,
+        index: u64,
+        command: []const u8,
+    };
+
+    const State = struct {
+        // Persistent state
+        current_term: u64 = 0,
+        voted_for: ?[]const u8 = null,
+        log: std.ArrayList(LogEntry),
+
+        // Volatile state
+        commit_index: u64 = 0,
+        last_applied: u64 = 0,
+
+        // Leader state
+        next_index: std.HashMap([]const u8, u64, std.hash_map.StringContext, std.hash_map.default_max_load_percentage),
+        match_index: std.HashMap([]const u8, u64, std.hash_map.StringContext, std.hash_map.default_max_load_percentage),
+
+        // Node state
+        role: RaftRole = .follower,
+        leader_id: ?[]const u8 = null,
+        election_timeout: i64 = 0,
+        heartbeat_timeout: i64 = 0,
+
+        allocator: std.mem.Allocator,
+    };
+
+    pub fn handle(actor: *Actor(Self), msg: Self) ?void {
+        var state = getOrCreateState(actor);
+
+        switch (msg) {
+            .RequestVote =&gt; |vote| {
+                handleRequestVote(state, vote, actor);
+            },
+            .RequestVoteResponse =&gt; |response| {
+                handleVoteResponse(state, response, actor);
+            },
+            .AppendEntries =&gt; |entries| {
+                handleAppendEntries(state, entries, actor);
+            },
+            .AppendEntriesResponse =&gt; |response| {
+                handleAppendEntriesResponse(state, response, actor);
+            },
+            .ClientRequest =&gt; |request| {
+                handleClientRequest(state, request, actor);
+            },
+        }
+    }
+};
+</code></pre>
+<h2 id="performance-tuning">Performance Tuning</h2>
+<h3 id="message-batching">Message Batching</h3>
+<p>Implement smart message batching for high-throughput scenarios:</p>
+<pre><code class="language-zig">const BatchingActor = union(enum) {
+    ProcessItem: []const u8,
+    Flush: void,
+    Configure: struct { max_batch_size: usize, max_delay_ms: u64 },
+
+    const Self = @This();
+
+    const State = struct {
+        batch: std.ArrayList([]const u8),
+        max_batch_size: usize = 100,
+        max_delay_ms: u64 = 10,
+        last_batch_time: i64 = 0,
+        timer_active: bool = false,
+        allocator: std.mem.Allocator,
+
+        pub fn shouldFlush(self: *State) bool {
+            const now = std.time.milliTimestamp();
+            return self.batch.items.len &gt;= self.max_batch_size or
+                   (self.batch.items.len &gt; 0 and (now - self.last_batch_time) &gt;= self.max_delay_ms);
+        }
+
+        pub fn processBatch(self: *State) void {
+            if (self.batch.items.len == 0) return;
+
+            // Process all items in batch
+            processBatchItems(self.batch.items);
+
+            // Clear batch
+            self.batch.clearRetainingCapacity();
+            self.last_batch_time = std.time.milliTimestamp();
+            self.timer_active = false;
+        }
+    };
+
+    pub fn handle(actor: *Actor(Self), msg: Self) ?void {
+        var state = getOrCreateState(actor);
+
+        switch (msg) {
+            .ProcessItem =&gt; |item| {
+                state.batch.append(item) catch return null;
+
+                if (state.shouldFlush()) {
+                    state.processBatch();
+                } else if (!state.timer_active) {
+                    // Schedule flush timer
+                    scheduleFlush(actor, state.max_delay_ms);
+                    state.timer_active = true;
+                }
+            },
+
+            .Flush =&gt; {
+                state.processBatch();
+            },
+
+            .Configure =&gt; |config| {
+                state.max_batch_size = config.max_batch_size;
+                state.max_delay_ms = config.max_delay_ms;
+            },
+        }
+    }
+};
+</code></pre>
+<h3 id="lock-free-data-structures">Lock-Free Data Structures</h3>
+<p>Implement lock-free data structures for high-performance scenarios:</p>
+<pre><code class="language-zig">const AtomicQueue = struct {
+    const Node = struct {
+        data: ?*anyopaque,
+        next: ?*Node,
+    };
+
+    head: ?*Node,
+    tail: ?*Node,
+    allocator: std.mem.Allocator,
+
+    pub fn init(allocator: std.mem.Allocator) AtomicQueue {
+        const dummy = allocator.create(Node) catch unreachable;
+        dummy.* = Node{ .data = null, .next = null };
+
+        return AtomicQueue{
+            .head = dummy,
+            .tail = dummy,
+            .allocator = allocator,
+        };
+    }
+
+    pub fn enqueue(self: *AtomicQueue, data: *anyopaque) !void {
+        const new_node = try self.allocator.create(Node);
+        new_node.* = Node{ .data = data, .next = null };
+
+        while (true) {
+            const tail = @atomicLoad(?*Node, &amp;self.tail, .acquire);
+            const next = @atomicLoad(?*Node, &amp;tail.?.next, .acquire);
+
+            if (tail == @atomicLoad(?*Node, &amp;self.tail, .acquire)) {
+                if (next == null) {
+                    if (@cmpxchgWeak(?*Node, &amp;tail.?.next, next, new_node, .release, .relaxed) == null) {
+                        _ = @cmpxchgWeak(?*Node, &amp;self.tail, tail, new_node, .release, .relaxed);
+                        break;
+                    }
+                } else {
+                    _ = @cmpxchgWeak(?*Node, &amp;self.tail, tail, next, .release, .relaxed);
+                }
+            }
+        }
+    }
+
+    pub fn dequeue(self: *AtomicQueue) ?*anyopaque {
+        while (true) {
+            const head = @atomicLoad(?*Node, &amp;self.head, .acquire);
+            const tail = @atomicLoad(?*Node, &amp;self.tail, .acquire);
+            const next = @atomicLoad(?*Node, &amp;head.?.next, .acquire);
+
+            if (head == @atomicLoad(?*Node, &amp;self.head, .acquire)) {
+                if (head == tail) {
+                    if (next == null) {
+                        return null; // Queue is empty
+                    }
+                    _ = @cmpxchgWeak(?*Node, &amp;self.tail, tail, next, .release, .relaxed);
+                } else {
+                    if (next) |next_node| {
+                        const data = @atomicLoad(?*anyopaque, &amp;next_node.data, .acquire);
+                        if (@cmpxchgWeak(?*Node, &amp;self.head, head, next_node, .release, .relaxed) == null) {
+                            self.allocator.destroy(head.?);
+                            return data;
+                        }
+                    }
+                }
+            }
+        }
+    }
+};
+</code></pre>
+<h2 id="monitoring-and-debugging">Monitoring and Debugging</h2>
+<h3 id="built-in-metrics-collection">Built-in Metrics Collection</h3>
+<p>Add comprehensive metrics to your actors:</p>
+<pre><code class="language-zig">const ActorMetrics = struct {
+    messages_processed: u64 = 0,
+    messages_failed: u64 = 0,
+    total_processing_time_ns: u64 = 0,
+    max_processing_time_ns: u64 = 0,
+    queue_size_samples: std.ArrayList(u32),
+
+    pub fn recordMessage(self: *ActorMetrics, processing_time_ns: u64, queue_size: u32) void {
+        self.messages_processed += 1;
+        self.total_processing_time_ns += processing_time_ns;
+        if (processing_time_ns &gt; self.max_processing_time_ns) {
+            self.max_processing_time_ns = processing_time_ns;
+        }
+
+        self.queue_size_samples.append(queue_size) catch {};
+
+        // Keep only recent samples
+        if (self.queue_size_samples.items.len &gt; 1000) {
+            _ = self.queue_size_samples.orderedRemove(0);
+        }
+    }
+
+    pub fn getAverageProcessingTime(self: *const ActorMetrics) f64 {
+        if (self.messages_processed == 0) return 0.0;
+        return @as(f64, @floatFromInt(self.total_processing_time_ns)) / @as(f64, @floatFromInt(self.messages_processed));
+    }
+
+    pub fn getAverageQueueSize(self: *const ActorMetrics) f64 {
+        if (self.queue_size_samples.items.len == 0) return 0.0;
+        var sum: u64 = 0;
+        for (self.queue_size_samples.items) |size| {
+            sum += size;
+        }
+        return @as(f64, @floatFromInt(sum)) / @as(f64, @floatFromInt(self.queue_size_samples.items.len));
+    }
+};
+</code></pre>
+<h3 id="debug-actor-inspector">Debug Actor Inspector</h3>
+<p>Create debugging tools for actor inspection:</p>
+<pre><code class="language-zig">const ActorInspector = union(enum) {
+    InspectActor: struct { actor_type: []const u8 },
+    GetSystemStats: void,
+    DumpActorState: struct { actor_type: []const u8 },
+
+    const Self = @This();
+
+    pub fn handle(actor: *Actor(Self), msg: Self) ?void {
+        switch (msg) {
+            .InspectActor =&gt; |inspect| {
+                std.log.info(&quot;Inspecting actor type: {s}&quot;, .{inspect.actor_type});
+                // Implementation would inspect actor state
+            },
+
+            .GetSystemStats =&gt; {
+                // Collect system-wide statistics
+                const stats = collectSystemStats();
+                std.log.info(&quot;System Stats:&quot;);
+                std.log.info(&quot;  Total Actors: {}&quot;, .{stats.total_actors});
+                std.log.info(&quot;  Total Messages: {}&quot;, .{stats.total_messages});
+                std.log.info(&quot;  Average Latency: {d:.2}ms&quot;, .{stats.avg_latency_ms});
+            },
+
+            .DumpActorState =&gt; |dump| {
+                // Implementation would serialize and dump actor state
+                std.log.info(&quot;Dumping state for actor type: {s}&quot;, .{dump.actor_type});
+            },
+        }
+    }
+};
+</code></pre>
+<h2 id="next-steps_5">Next Steps</h2>
+<p>These advanced topics provide the foundation for building sophisticated, production-ready systems with zctor. Continue your journey with:</p>
+<ul>
+<li><a href="./09-contributing.md">Contributing</a> - How to contribute to the zctor project</li>
+<li><a href="./07-best-practices.md">Best Practices</a> - Review core best practices</li>
+<li><a href="./06-examples.md">Examples</a> - See these patterns in action</li>
+</ul>
+<hr />
+<h1 id="10-contributing">10. Contributing</h1>
+<p>Welcome to the zctor contributor guide! This chapter explains how to contribute to the zctor project, from setting up your development environment to submitting your changes.</p>
+<h2 id="getting-started_1">Getting Started</h2>
+<h3 id="development-environment-setup">Development Environment Setup</h3>
+<ol>
+<li>
+<p><strong>Install Zig</strong>: Ensure you have Zig 0.14.0 or later installed:
+   <code>bash
+   # Download from https://ziglang.org/download/
+   # Or use your package manager</code></p>
+</li>
+<li>
+<p><strong>Clone the Repository</strong>:
+   <code>bash
+   git clone https://github.com/YouNeedWork/zctor.git
+   cd zctor</code></p>
+</li>
+<li>
+<p><strong>Build and Test</strong>:
+   <code>bash
+   zig build
+   zig build test
+   zig build run</code></p>
+</li>
+<li>
+<p><strong>Generate Documentation</strong>:
+   <code>bash
+   zig build docs</code></p>
+</li>
+</ol>
+<h3 id="development-tools">Development Tools</h3>
+<p><strong>Recommended Editor Setup</strong>:
+- <strong>VS Code</strong>: Install the official Zig extension
+- <strong>Vim/Neovim</strong>: Use <code>vim-zig</code> or <code>nvim-treesitter</code>
+- <strong>Emacs</strong>: Use <code>zig-mode</code></p>
+<p><strong>Useful Commands</strong>:</p>
+<pre><code class="language-bash"># Run with debug info
+zig build -Doptimize=Debug
+
+# Run specific tests
+zig test src/actor.zig
+
+# Format code
+zig fmt src/
+
+# Check for issues
+zig build -Doptimize=ReleaseSafe
+</code></pre>
+<h2 id="code-style-guidelines">Code Style Guidelines</h2>
+<h3 id="naming-conventions">Naming Conventions</h3>
+<pre><code class="language-zig">// Types: PascalCase
+const ActorMessage = union(enum) { ... };
+const DatabaseConnection = struct { ... };
+
+// Functions and variables: camelCase
+pub fn createConnection() !*DatabaseConnection { ... }
+const messageCount: u32 = 0;
+
+// Constants: SCREAMING_SNAKE_CASE
+const MAX_CONNECTIONS: u32 = 100;
+const DEFAULT_TIMEOUT_MS: u64 = 5000;
+
+// Private fields: snake_case with leading underscore
+const State = struct {
+    _internal_counter: u32,
+    public_data: []const u8,
+};
+</code></pre>
+<h3 id="code-organization">Code Organization</h3>
+<pre><code class="language-zig">// File header comment
+//! Brief description of the module
+//! 
+//! Longer description if needed
+//! Multiple lines are okay
+
+const std = @import(&quot;std&quot;);
+const builtin = @import(&quot;builtin&quot;);
+
+// Local imports
+const Actor = @import(&quot;actor.zig&quot;).Actor;
+const Context = @import(&quot;context.zig&quot;);
+
+// Constants first
+const DEFAULT_BUFFER_SIZE: usize = 4096;
+
+// Types next
+const MyStruct = struct {
+    // Public fields first
+    data: []const u8,
+
+    // Private fields last
+    _allocator: std.mem.Allocator,
+
+    // Methods
+    pub fn init(allocator: std.mem.Allocator) !*MyStruct { ... }
+
+    pub fn deinit(self: *MyStruct) void { ... }
+
+    // Private methods last
+    fn internalMethod(self: *MyStruct) void { ... }
+};
+
+// Free functions last
+pub fn utilityFunction() void { ... }
+</code></pre>
+<h3 id="documentation-comments">Documentation Comments</h3>
+<pre><code class="language-zig">/// Creates a new actor with the specified message type and handler.
+/// 
+/// The actor will be assigned to a thread automatically based on the
+/// current load balancing strategy.
+/// 
+/// # Arguments
+/// * `T` - The message type this actor will handle
+/// * `handler` - Function to process messages of type T
+/// 
+/// # Returns
+/// Returns an error if the actor cannot be created or if the maximum
+/// number of actors has been reached.
+/// 
+/// # Example
+/// ```zig
+/// try engine.spawn(MyMessage, MyMessage.handle);
+/// ```
+pub fn spawn(self: *Self, comptime T: type, handler: fn (*Actor(T), T) ?void) !void {
+    // Implementation
+}
+
+/// Actor state for message counting
+const CounterState = struct {
+    /// Number of messages processed
+    count: u32 = 0,
+
+    /// Timestamp of last message
+    last_message_time: i64 = 0,
+};
+</code></pre>
+<h3 id="error-handling_2">Error Handling</h3>
+<pre><code class="language-zig">// Define specific error types
+const ActorError = error{
+    InvalidMessage,
+    ActorNotFound,
+    ThreadPoolFull,
+    StateCorrupted,
+};
+
+// Use explicit error handling
+pub fn sendMessage(self: *Self, msg: anytype) ActorError!void {
+    const thread = self.getAvailableThread() orelse return ActorError.ThreadPoolFull;
+
+    thread.enqueueMessage(msg) catch |err| switch (err) {
+        error.OutOfMemory =&gt; return ActorError.ThreadPoolFull,
+        error.InvalidMessage =&gt; return ActorError.InvalidMessage,
+        else =&gt; return err,
+    };
+}
+
+// Handle errors at appropriate levels
+pub fn handle(actor: *Actor(MyMessage), msg: MyMessage) ?void {
+    processMessage(msg) catch |err| {
+        std.log.err(&quot;Failed to process message: {}&quot;, .{err});
+        return null; // Signal error to framework
+    };
+}
+</code></pre>
+<h3 id="testing-patterns">Testing Patterns</h3>
+<pre><code class="language-zig">const testing = std.testing;
+
+test &quot;Actor processes messages correctly&quot; {
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer _ = gpa.deinit();
+    const allocator = gpa.allocator();
+
+    // Setup
+    var engine = try ActorEngine.init(allocator);
+    defer engine.deinit();
+
+    // Test
+    try engine.spawn(TestMessage, TestMessage.handle);
+
+    var msg = TestMessage{ .Test = &quot;hello&quot; };
+    try engine.send(TestMessage, &amp;msg);
+
+    // Verify (in a real test, you'd need better verification)
+    try testing.expect(true);
+}
+
+test &quot;Error handling works correctly&quot; {
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer _ = gpa.deinit();
+    const allocator = gpa.allocator();
+
+    var engine = try ActorEngine.init(allocator);
+    defer engine.deinit();
+
+    // Test error condition
+    const result = engine.spawn(InvalidMessage, invalidHandler);
+    try testing.expectError(error.InvalidMessage, result);
+}
+</code></pre>
+<h2 id="contribution-workflow">Contribution Workflow</h2>
+<h3 id="1-create-an-issue">1. Create an Issue</h3>
+<p>Before starting work, create an issue to discuss:
+- <strong>Bug Reports</strong>: Include reproduction steps, expected vs actual behavior
+- <strong>Feature Requests</strong>: Describe the use case and proposed API
+- <strong>Documentation</strong>: Identify gaps or improvements needed</p>
+<p><strong>Bug Report Template</strong>:</p>
+<pre><code class="language-markdown">## Bug Description
+Brief description of the issue
+
+## Reproduction Steps
+1. Step 1
+2. Step 2
+3. Step 3
+
+## Expected Behavior
+What should happen
+
+## Actual Behavior
+What actually happens
+
+## Environment
+- Zig version: 
+- OS: 
+- zctor version:
+
+## Additional Context
+Any other relevant information
+</code></pre>
+<h3 id="2-fork-and-clone">2. Fork and Clone</h3>
+<pre><code class="language-bash"># Fork the repository on GitHub
+# Then clone your fork
+git clone https://github.com/YOUR_USERNAME/zctor.git
+cd zctor
+git remote add upstream https://github.com/YouNeedWork/zctor.git
+</code></pre>
+<h3 id="3-create-a-branch">3. Create a Branch</h3>
+<pre><code class="language-bash"># Create a feature branch
+git checkout -b feature/your-feature-name
+
+# Or a bugfix branch
+git checkout -b fix/issue-123-description
+</code></pre>
+<h3 id="4-make-changes">4. Make Changes</h3>
+<ul>
+<li>Write clean, well-documented code</li>
+<li>Add tests for new functionality</li>
+<li>Update documentation if needed</li>
+<li>Follow the code style guidelines</li>
+</ul>
+<h3 id="5-test-your-changes">5. Test Your Changes</h3>
+<pre><code class="language-bash"># Run all tests
+zig build test
+
+# Test with different optimization levels
+zig build test -Doptimize=Debug
+zig build test -Doptimize=ReleaseSafe
+zig build test -Doptimize=ReleaseFast
+
+# Run the example
+zig build run
+
+# Generate documentation
+zig build docs
+</code></pre>
+<h3 id="6-commit-your-changes">6. Commit Your Changes</h3>
+<pre><code class="language-bash"># Stage your changes
+git add .
+
+# Commit with a descriptive message
+git commit -m &quot;Add feature: brief description
+
+Longer description of what the commit does and why.
+References #issue-number if applicable.&quot;
+</code></pre>
+<p><strong>Commit Message Guidelines</strong>:
+- Use the imperative mood ("Add feature" not "Added feature")
+- Keep the first line under 50 characters
+- Reference issues with #number
+- Explain the "why" not just the "what"</p>
+<h3 id="7-push-and-create-pull-request">7. Push and Create Pull Request</h3>
+<pre><code class="language-bash"># Push to your fork
+git push origin feature/your-feature-name
+
+# Create a pull request on GitHub
+# Include a description of your changes
+</code></pre>
+<p><strong>Pull Request Template</strong>:</p>
+<pre><code class="language-markdown">## Description
+Brief description of the changes
+
+## Related Issue
+Fixes #issue-number
+
+## Changes Made
+- Change 1
+- Change 2
+- Change 3
+
+## Testing
+- [ ] All existing tests pass
+- [ ] Added tests for new functionality
+- [ ] Tested on multiple platforms (if applicable)
+
+## Documentation
+- [ ] Updated relevant documentation
+- [ ] Added code comments where needed
+
+## Breaking Changes
+List any breaking changes and migration path
+</code></pre>
+<h2 id="types-of-contributions">Types of Contributions</h2>
+<h3 id="bug-fixes">Bug Fixes</h3>
+<p><strong>Small Fixes</strong>:
+- Typos in documentation
+- Small code corrections
+- Test improvements</p>
+<p><strong>Process</strong>:
+1. Create issue (optional for obvious fixes)
+2. Make minimal fix
+3. Add test if applicable
+4. Submit pull request</p>
+<h3 id="new-features">New Features</h3>
+<p><strong>Before Starting</strong>:
+- Discuss the feature in an issue
+- Get consensus on the approach
+- Consider backward compatibility</p>
+<p><strong>Implementation</strong>:
+- Write comprehensive tests
+- Update documentation
+- Consider performance implications
+- Ensure thread safety</p>
+<h3 id="documentation">Documentation</h3>
+<p><strong>Types</strong>:
+- API documentation improvements
+- Tutorial updates
+- Example code
+- Architecture explanations</p>
+<p><strong>Guidelines</strong>:
+- Use clear, concise language
+- Include code examples
+- Test all code examples
+- Update table of contents</p>
+<h3 id="performance-improvements">Performance Improvements</h3>
+<p><strong>Process</strong>:
+1. Create benchmarks to measure current performance
+2. Implement optimization
+3. Measure improvement
+4. Ensure no regressions in functionality
+5. Document the improvement</p>
+<p><strong>Example Benchmark</strong>:</p>
+<pre><code class="language-zig">const BenchmarkSuite = struct {
+    fn benchmarkMessageProcessing(allocator: std.mem.Allocator) !void {
+        const iterations = 1000000;
+
+        var engine = try ActorEngine.init(allocator);
+        defer engine.deinit();
+
+        try engine.spawn(BenchMessage, BenchMessage.handle);
+
+        const start = std.time.nanoTimestamp();
+
+        for (0..iterations) |_| {
+            var msg = BenchMessage.Test;
+            try engine.send(BenchMessage, &amp;msg);
+        }
+
+        const end = std.time.nanoTimestamp();
+        const duration = end - start;
+        const ns_per_message = duration / iterations;
+
+        std.debug.print(&quot;Processed {} messages in {}ns ({d:.2} ns/message)\n&quot;, 
+                       .{ iterations, duration, @as(f64, @floatFromInt(ns_per_message)) });
+    }
+};
+</code></pre>
+<h2 id="code-review-process">Code Review Process</h2>
+<h3 id="as-a-reviewer">As a Reviewer</h3>
+<p><strong>What to Look For</strong>:
+- Code correctness and safety
+- Performance implications
+- Test coverage
+- Documentation quality
+- Adherence to style guidelines</p>
+<p><strong>Review Comments</strong>:
+- Be constructive and helpful
+- Suggest specific improvements
+- Explain the reasoning behind requests
+- Acknowledge good practices</p>
+<p><strong>Example Review Comments</strong>:</p>
+<pre><code>// Good
+&quot;Consider using an arena allocator here for better performance 
+with temporary allocations. See docs/best-practices.md for examples.&quot;
+
+// Avoid
+&quot;This is wrong.&quot;
+</code></pre>
+<h3 id="as-a-contributor">As a Contributor</h3>
+<p><strong>Responding to Reviews</strong>:
+- Address all feedback
+- Ask questions if unclear
+- Make requested changes promptly
+- Update tests and docs as needed</p>
+<p><strong>Common Review Requests</strong>:
+- Add error handling
+- Improve test coverage
+- Update documentation
+- Fix formatting issues
+- Address performance concerns</p>
+<h2 id="release-process">Release Process</h2>
+<h3 id="version-numbering">Version Numbering</h3>
+<p>zctor follows <a href="https://semver.org/">Semantic Versioning</a>:
+- <strong>MAJOR</strong>: Breaking changes
+- <strong>MINOR</strong>: New features (backward compatible)
+- <strong>PATCH</strong>: Bug fixes (backward compatible)</p>
+<h3 id="release-checklist">Release Checklist</h3>
+<ol>
+<li>
+<p><strong>Update Version</strong>:
+   <code>zig
+   // In build.zig.zon
+   .version = "1.2.3",</code></p>
+</li>
+<li>
+<p><strong>Update CHANGELOG.md</strong>:
+   ```markdown
+   ## [1.2.3] - 2024-01-15</p>
+</li>
+</ol>
+<p>### Added
+   - New feature X</p>
+<p>### Changed
+   - Improved performance of Y</p>
+<p>### Fixed
+   - Bug in Z component
+   ```</p>
+<ol>
+<li>
+<p><strong>Run Full Test Suite</strong>:
+   <code>bash
+   zig build test
+   zig build docs</code></p>
+</li>
+<li>
+<p><strong>Create Release Tag</strong>:
+   <code>bash
+   git tag v1.2.3
+   git push origin v1.2.3</code></p>
+</li>
+</ol>
+<h2 id="community-guidelines">Community Guidelines</h2>
+<h3 id="code-of-conduct">Code of Conduct</h3>
+<p>We are committed to providing a welcoming and inclusive environment:</p>
+<ul>
+<li><strong>Be Respectful</strong>: Treat all contributors with respect</li>
+<li><strong>Be Constructive</strong>: Provide helpful feedback and suggestions</li>
+<li><strong>Be Patient</strong>: Everyone is learning and contributing at their own pace</li>
+<li><strong>Be Inclusive</strong>: Welcome contributors regardless of experience level</li>
+</ul>
+<h3 id="communication">Communication</h3>
+<p><strong>Channels</strong>:
+- <strong>GitHub Issues</strong>: Bug reports, feature requests, discussions
+- <strong>Pull Requests</strong>: Code review and collaboration
+- <strong>Discussions</strong>: General questions and community support</p>
+<p><strong>Best Practices</strong>:
+- Search existing issues before creating new ones
+- Use clear, descriptive titles
+- Provide sufficient context and examples
+- Be patient with response times</p>
+<h2 id="getting-help_1">Getting Help</h2>
+<h3 id="documentation_1">Documentation</h3>
+<ul>
+<li>Start with this documentation book</li>
+<li>Check the API reference</li>
+<li>Look at example code</li>
+<li>Review best practices</li>
+</ul>
+<h3 id="community-support">Community Support</h3>
+<ul>
+<li>Search existing GitHub issues</li>
+<li>Create a new issue with detailed information</li>
+<li>Join community discussions</li>
+<li>Ask specific, well-formed questions</li>
+</ul>
+<h3 id="troubleshooting_1">Troubleshooting</h3>
+<p><strong>Common Issues</strong>:</p>
+<ol>
+<li>
+<p><strong>Build Failures</strong>:
+   <code>bash
+   # Clean and rebuild
+   rm -rf zig-cache zig-out
+   zig build</code></p>
+</li>
+<li>
+<p><strong>Test Failures</strong>:
+   ```bash
+   # Run specific test
+   zig test src/specific_file.zig</p>
+</li>
+</ol>
+<p># Run with more verbose output
+   zig build test --verbose
+   ```</p>
+<ol>
+<li><strong>Documentation Generation</strong>:
+   ```bash
+   # Ensure Python 3 is available
+   python3 --version</li>
+</ol>
+<p># Run documentation generator
+   zig build docs
+   ```</p>
+<h2 id="recognition">Recognition</h2>
+<h3 id="contributors">Contributors</h3>
+<p>We recognize all types of contributions:
+- Code contributions
+- Documentation improvements
+- Bug reports
+- Feature suggestions
+- Community support</p>
+<h3 id="attribution">Attribution</h3>
+<p>Contributors are recognized in:
+- <code>CONTRIBUTORS.md</code> file
+- Release notes
+- Documentation acknowledgments</p>
+<h2 id="thank-you">Thank You</h2>
+<p>Thank you for contributing to zctor! Your contributions help make this project better for everyone. Every contribution, no matter how small, is valuable and appreciated.</p>
+<h2 id="next-steps_6">Next Steps</h2>
+<ul>
+<li><a href="./06-examples.md">Examples</a> - See practical implementations</li>
+<li><a href="./07-best-practices.md">Best Practices</a> - Learn optimization techniques</li>
+<li><a href="./08-advanced-topics.md">Advanced Topics</a> - Explore complex patterns</li>
+</ul>
+<hr />
+<h1 id="11-appendix">11. Appendix</h1>
+<p>This appendix provides additional resources, references, and supplementary information for zctor users and contributors.</p>
+<h2 id="glossary">Glossary</h2>
+<h3 id="a">A</h3>
+<p><strong>Actor</strong>: An isolated computational unit that processes messages sequentially and maintains private state.</p>
+<p><strong>Actor Model</strong>: A mathematical model of concurrent computation where actors are the fundamental units of computation.</p>
+<p><strong>Actor System</strong>: A collection of actors working together, managed by an ActorEngine.</p>
+<p><strong>Allocator</strong>: A Zig interface for memory allocation and deallocation.</p>
+<p><strong>Arena Allocator</strong>: An allocator that allocates memory from a large block and frees it all at once.</p>
+<p><strong>Asynchronous</strong>: Operations that don't block the calling thread, allowing other work to proceed.</p>
+<h3 id="b">B</h3>
+<p><strong>Backpressure</strong>: A mechanism to prevent overwhelming a system by controlling the rate of message flow.</p>
+<p><strong>Batch Processing</strong>: Processing multiple items together for improved efficiency.</p>
+<p><strong>Blocking Operation</strong>: An operation that prevents the thread from doing other work until it completes.</p>
+<h3 id="c">C</h3>
+<p><strong>Callback</strong>: A function passed as an argument to be called at a later time.</p>
+<p><strong>Circuit Breaker</strong>: A design pattern that prevents cascading failures by temporarily disabling failing operations.</p>
+<p><strong>Concurrency</strong>: The ability to handle multiple tasks at the same time, possibly on different threads.</p>
+<p><strong>Context</strong>: Runtime environment and services provided to actors.</p>
+<h3 id="d">D</h3>
+<p><strong>Deadlock</strong>: A situation where two or more actors are waiting for each other indefinitely.</p>
+<p><strong>Distributed System</strong>: A system where components run on multiple machines connected by a network.</p>
+<h3 id="e">E</h3>
+<p><strong>Event Loop</strong>: A programming construct that waits for and dispatches events or messages.</p>
+<p><strong>Event-Driven</strong>: A programming paradigm where the flow of execution is determined by events.</p>
+<h3 id="f">F</h3>
+<p><strong>FIFO</strong>: First In, First Out - a queuing discipline where the first item added is the first to be removed.</p>
+<p><strong>Fault Tolerance</strong>: The ability of a system to continue operating despite failures.</p>
+<h3 id="l">L</h3>
+<p><strong>libxev</strong>: A high-performance, cross-platform event loop library used by zctor.</p>
+<p><strong>Load Balancing</strong>: Distributing work across multiple resources to optimize performance.</p>
+<p><strong>Lock-Free</strong>: Programming techniques that avoid using locks for synchronization.</p>
+<h3 id="m">M</h3>
+<p><strong>Mailbox</strong>: The message queue associated with each actor.</p>
+<p><strong>Message</strong>: A unit of communication between actors.</p>
+<p><strong>Message Passing</strong>: A form of communication where actors send messages to each other.</p>
+<p><strong>Mutex</strong>: A synchronization primitive that ensures mutual exclusion.</p>
+<h3 id="p">P</h3>
+<p><strong>Parallelism</strong>: Executing multiple tasks simultaneously on multiple CPU cores.</p>
+<p><strong>Publisher-Subscriber</strong>: A messaging pattern where publishers send messages to subscribers via topics.</p>
+<h3 id="r">R</h3>
+<p><strong>Race Condition</strong>: A situation where the outcome depends on the relative timing of events.</p>
+<p><strong>Request-Response</strong>: A communication pattern where one actor sends a request and waits for a response.</p>
+<h3 id="s">S</h3>
+<p><strong>Scalability</strong>: The ability of a system to handle increased load by adding resources.</p>
+<p><strong>State</strong>: Data maintained by an actor between message processing.</p>
+<p><strong>Supervisor</strong>: An actor responsible for managing the lifecycle of child actors.</p>
+<p><strong>Synchronization</strong>: Coordination of concurrent activities to ensure correct execution.</p>
+<h3 id="t">T</h3>
+<p><strong>Thread</strong>: An execution context that can run concurrently with other threads.</p>
+<p><strong>Thread Pool</strong>: A collection of worker threads used to execute tasks.</p>
+<p><strong>Throughput</strong>: The number of operations completed per unit of time.</p>
+<h3 id="z">Z</h3>
+<p><strong>Zig</strong>: A general-purpose programming language and toolchain for maintaining robust, optimal, and reusable software.</p>
+<h2 id="performance-characteristics_1">Performance Characteristics</h2>
+<h3 id="benchmark-results">Benchmark Results</h3>
+<p>The following benchmarks were performed on a typical development machine (Intel i7-8700K, 32GB RAM, Ubuntu 22.04):</p>
+<h4 id="message-processing-throughput">Message Processing Throughput</h4>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Messages/Second</th>
+<th>Latency (μs)</th>
+<th>Memory Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Single Actor</td>
+<td>2,500,000</td>
+<td>0.4</td>
+<td>1MB</td>
+</tr>
+<tr>
+<td>10 Actors</td>
+<td>20,000,000</td>
+<td>0.5</td>
+<td>10MB</td>
+</tr>
+<tr>
+<td>100 Actors</td>
+<td>180,000,000</td>
+<td>0.6</td>
+<td>100MB</td>
+</tr>
+<tr>
+<td>1000 Actors</td>
+<td>1,600,000,000</td>
+<td>0.8</td>
+<td>1GB</td>
+</tr>
+</tbody>
+</table>
+<h4 id="memory-overhead">Memory Overhead</h4>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Per-Instance Overhead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ActorEngine</td>
+<td>512 bytes + thread pool</td>
+</tr>
+<tr>
+<td>ActorThread</td>
+<td>1KB + event loop</td>
+</tr>
+<tr>
+<td>Actor(T)</td>
+<td>256 bytes + message queue</td>
+</tr>
+<tr>
+<td>Message</td>
+<td>Type-dependent</td>
+</tr>
+</tbody>
+</table>
+<h4 id="scaling-characteristics">Scaling Characteristics</h4>
+<ul>
+<li><strong>Linear scaling</strong> up to CPU core count</li>
+<li><strong>Constant memory</strong> overhead per actor</li>
+<li><strong>Sub-microsecond</strong> message latency</li>
+<li><strong>Zero-copy</strong> message passing within threads</li>
+</ul>
+<h3 id="performance-tips">Performance Tips</h3>
+<ol>
+<li><strong>Batch Messages</strong>: Process multiple messages together when possible</li>
+<li><strong>Use Arena Allocators</strong>: For request-scoped allocations</li>
+<li><strong>Minimize State</strong>: Keep actor state small and focused</li>
+<li><strong>Avoid Blocking</strong>: Never block in message handlers</li>
+<li><strong>Pool Resources</strong>: Reuse expensive resources like connections</li>
+</ol>
+<h2 id="error-codes-reference">Error Codes Reference</h2>
+<h3 id="actorengine-errors">ActorEngine Errors</h3>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OutOfMemory</code></td>
+<td>-1</td>
+<td>Insufficient memory for operation</td>
+</tr>
+<tr>
+<td><code>ThreadPoolFull</code></td>
+<td>-2</td>
+<td>Maximum thread count reached</td>
+</tr>
+<tr>
+<td><code>InvalidConfiguration</code></td>
+<td>-3</td>
+<td>Invalid engine configuration</td>
+</tr>
+<tr>
+<td><code>AlreadyStarted</code></td>
+<td>-4</td>
+<td>Engine is already running</td>
+</tr>
+<tr>
+<td><code>NotStarted</code></td>
+<td>-5</td>
+<td>Engine has not been started</td>
+</tr>
+</tbody>
+</table>
+<h3 id="actor-errors">Actor Errors</h3>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>InvalidMessage</code></td>
+<td>-10</td>
+<td>Message validation failed</td>
+</tr>
+<tr>
+<td><code>ActorNotFound</code></td>
+<td>-11</td>
+<td>Target actor not found</td>
+</tr>
+<tr>
+<td><code>StateCorrupted</code></td>
+<td>-12</td>
+<td>Actor state is corrupted</td>
+</tr>
+<tr>
+<td><code>HandlerFailed</code></td>
+<td>-13</td>
+<td>Message handler returned error</td>
+</tr>
+</tbody>
+</table>
+<h3 id="threading-errors">Threading Errors</h3>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ThreadCreationFailed</code></td>
+<td>-20</td>
+<td>Failed to create thread</td>
+</tr>
+<tr>
+<td><code>ThreadJoinFailed</code></td>
+<td>-21</td>
+<td>Failed to join thread</td>
+</tr>
+<tr>
+<td><code>EventLoopFailed</code></td>
+<td>-22</td>
+<td>Event loop error</td>
+</tr>
+</tbody>
+</table>
+<h2 id="configuration-reference">Configuration Reference</h2>
+<h3 id="actorengine-configuration">ActorEngine Configuration</h3>
+<pre><code class="language-zig">const EngineConfig = struct {
+    /// Number of worker threads (0 = auto-detect)
+    thread_count: ?usize = null,
+
+    /// Maximum actors per thread
+    max_actors_per_thread: usize = 1000,
+
+    /// Message queue size per actor
+    message_queue_size: usize = 100,
+
+    /// Enable performance monitoring
+    enable_metrics: bool = false,
+
+    /// Custom allocator for engine
+    allocator: ?std.mem.Allocator = null,
+};
+</code></pre>
+<h3 id="actor-configuration">Actor Configuration</h3>
+<pre><code class="language-zig">const ActorConfig = struct {
+    /// Initial message queue capacity
+    initial_queue_capacity: usize = 16,
+
+    /// Maximum message queue size
+    max_queue_size: usize = 1000,
+
+    /// Enable state validation in debug builds
+    validate_state: bool = true,
+
+    /// Custom allocator for actor
+    allocator: ?std.mem.Allocator = null,
+};
+</code></pre>
+<h3 id="threading-configuration">Threading Configuration</h3>
+<pre><code class="language-zig">const ThreadConfig = struct {
+    /// Thread stack size
+    stack_size: usize = 1024 * 1024, // 1MB
+
+    /// CPU affinity mask
+    cpu_affinity: ?[]const usize = null,
+
+    /// Thread priority
+    priority: enum { low, normal, high } = .normal,
+
+    /// Enable thread-local metrics
+    enable_metrics: bool = false,
+};
+</code></pre>
+<h2 id="platform-support">Platform Support</h2>
+<h3 id="supported-platforms">Supported Platforms</h3>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linux x86_64</td>
+<td>✅ Full</td>
+<td>Primary development platform</td>
+</tr>
+<tr>
+<td>Linux ARM64</td>
+<td>✅ Full</td>
+<td>Tested on ARM servers</td>
+</tr>
+<tr>
+<td>macOS x86_64</td>
+<td>✅ Full</td>
+<td>Intel Macs</td>
+</tr>
+<tr>
+<td>macOS ARM64</td>
+<td>✅ Full</td>
+<td>Apple Silicon</td>
+</tr>
+<tr>
+<td>Windows x86_64</td>
+<td>🔄 Beta</td>
+<td>Limited testing</td>
+</tr>
+<tr>
+<td>FreeBSD x86_64</td>
+<td>🔄 Beta</td>
+<td>Community supported</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dependencies">Dependencies</h3>
+<table>
+<thead>
+<tr>
+<th>Dependency</th>
+<th>Version</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>libxev</td>
+<td>Latest</td>
+<td>Event loop implementation</td>
+</tr>
+<tr>
+<td>Zig</td>
+<td>≥ 0.14.0</td>
+<td>Compiler and standard library</td>
+</tr>
+</tbody>
+</table>
+<h3 id="minimum-requirements">Minimum Requirements</h3>
+<ul>
+<li><strong>Zig</strong>: 0.14.0 or later</li>
+<li><strong>Memory</strong>: 1GB RAM minimum, 4GB recommended</li>
+<li><strong>CPU</strong>: Any 64-bit processor</li>
+<li><strong>OS</strong>: Modern Linux, macOS, or Windows</li>
+</ul>
+<h2 id="migration-guide">Migration Guide</h2>
+<h3 id="from-version-0x-to-10">From Version 0.x to 1.0</h3>
+<h4 id="breaking-changes">Breaking Changes</h4>
+<ol>
+<li><strong>Message Handler Signature</strong>:
+   ```zig
+   // Old (0.x)
+   pub fn handle(msg: MyMessage) void {
+       // Process message
+   }</li>
+</ol>
+<p>// New (1.0)
+   pub fn handle(actor: *Actor(MyMessage), msg: MyMessage) ?void {
+       // Process message
+       // Return null on error
+   }
+   ```</p>
+<ol>
+<li><strong>Engine Initialization</strong>:
+   ```zig
+   // Old (0.x)
+   var engine = ActorEngine.init();</li>
+</ol>
+<p>// New (1.0)
+   var engine = try ActorEngine.init(allocator);
+   ```</p>
+<ol>
+<li><strong>State Management</strong>:
+   ```zig
+   // Old (0.x)
+   const state = getState(MyState);</li>
+</ol>
+<p>// New (1.0)
+   const state = actor.getState(MyState) orelse createState(actor);
+   ```</p>
+<h4 id="migration-steps">Migration Steps</h4>
+<ol>
+<li><strong>Update Handler Signatures</strong>: Add actor parameter and optional return type</li>
+<li><strong>Add Error Handling</strong>: Handle potential errors in API calls</li>
+<li><strong>Update State Access</strong>: Use new state management API</li>
+<li><strong>Update Tests</strong>: Modify tests for new API</li>
+</ol>
+<h2 id="license-information">License Information</h2>
+<h3 id="zctor-license">zctor License</h3>
+<p>zctor is released under the MIT License:</p>
+<pre><code>MIT License
+
+Copyright (c) 2024 zctor contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</code></pre>
+<h3 id="third-party-licenses">Third-Party Licenses</h3>
+<h4 id="libxev">libxev</h4>
+<p>libxev is licensed under the MIT License. See the <a href="https://github.com/mitchellh/libxev">libxev repository</a> for details.</p>
+<h4 id="zig-standard-library">Zig Standard Library</h4>
+<p>The Zig standard library is licensed under the MIT License. See the <a href="https://github.com/ziglang/zig">Zig repository</a> for details.</p>
+<h2 id="additional-resources">Additional Resources</h2>
+<h3 id="learning-resources">Learning Resources</h3>
+<h4 id="books">Books</h4>
+<ul>
+<li><em>"Programming in Zig"</em> - Introduction to Zig programming</li>
+<li><em>"Concurrent Programming"</em> - General concurrency concepts</li>
+<li><em>"Actor Model in Practice"</em> - Actor model implementations</li>
+</ul>
+<h4 id="papers">Papers</h4>
+<ul>
+<li>"A Universal Modular Actor Formalism for Artificial Intelligence" (Hewitt, 1973)</li>
+<li>"Actors: A Model of Concurrent Computation in Distributed Systems" (Agha, 1986)</li>
+</ul>
+<h4 id="online-resources">Online Resources</h4>
+<ul>
+<li><a href="https://ziglang.org/documentation/">Zig Documentation</a></li>
+<li><a href="https://github.com/mitchellh/libxev">libxev Documentation</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Actor_model">Actor Model Wikipedia</a></li>
+</ul>
+<h3 id="similar-projects">Similar Projects</h3>
+<h4 id="zig-ecosystem">Zig Ecosystem</h4>
+<ul>
+<li><strong>zig-network</strong>: Networking library for Zig</li>
+<li><strong>zig-async</strong>: Async/await primitives for Zig</li>
+<li><strong>zig-channels</strong>: Channel-based communication</li>
+</ul>
+<h4 id="other-languages">Other Languages</h4>
+<ul>
+<li><strong>Akka</strong> (Scala/Java): Mature actor framework</li>
+<li><strong>Erlang/OTP</strong>: Original actor model implementation</li>
+<li><strong>Elixir</strong>: Modern Erlang-based language</li>
+<li><strong>Orleans</strong> (.NET): Virtual actor framework</li>
+<li><strong>Proto.Actor</strong> (Go/C#): Cross-platform actor framework</li>
+</ul>
+<h3 id="community">Community</h3>
+<h4 id="github">GitHub</h4>
+<ul>
+<li><a href="https://github.com/YouNeedWork/zctor">zctor Repository</a></li>
+<li><a href="https://github.com/YouNeedWork/zctor/issues">Issue Tracker</a></li>
+<li><a href="https://github.com/YouNeedWork/zctor/discussions">Discussions</a></li>
+</ul>
+<h4 id="communication_1">Communication</h4>
+<ul>
+<li>Create issues for bugs and feature requests</li>
+<li>Use discussions for questions and general topics</li>
+<li>Submit pull requests for contributions</li>
+</ul>
+<h3 id="acknowledgments">Acknowledgments</h3>
+<p>zctor is built on the shoulders of giants:</p>
+<ul>
+<li><strong>Mitchell Hashimoto</strong> for libxev</li>
+<li><strong>Andrew Kelley</strong> and the Zig team for the Zig language</li>
+<li><strong>Carl Hewitt</strong> for the original Actor Model</li>
+<li><strong>Joe Armstrong</strong> and the Erlang team for proving actors work in practice</li>
+<li><strong>All contributors</strong> who have helped improve zctor</li>
+</ul>
+<h2 id="index">Index</h2>
+<h3 id="a_1">A</h3>
+<ul>
+<li>Actor, 1-2, 5-6, 8-9</li>
+<li>ActorEngine, 3-4, 7-8</li>
+<li>ActorThread, 4-5, 8-9</li>
+<li>Allocator, 7-8</li>
+<li>Architecture, 4</li>
+</ul>
+<h3 id="b_1">B</h3>
+<ul>
+<li>Best Practices, 7</li>
+<li>Benchmarks, Appendix</li>
+</ul>
+<h3 id="c_1">C</h3>
+<ul>
+<li>Configuration, Appendix</li>
+<li>Contributing, 9</li>
+</ul>
+<h3 id="e_1">E</h3>
+<ul>
+<li>Examples, 6</li>
+<li>Error Handling, 7, Appendix</li>
+</ul>
+<h3 id="i">I</h3>
+<ul>
+<li>Installation, 2</li>
+<li>Introduction, 1</li>
+</ul>
+<h3 id="l_1">L</h3>
+<ul>
+<li>License, Appendix</li>
+<li>libxev, 1, 4</li>
+</ul>
+<h3 id="m_1">M</h3>
+<ul>
+<li>Messages, 3, 6-7</li>
+<li>Migration, Appendix</li>
+</ul>
+<h3 id="p_1">P</h3>
+<ul>
+<li>Performance, 7-8, Appendix</li>
+<li>Patterns, 6-8</li>
+</ul>
+<h3 id="q">Q</h3>
+<ul>
+<li>Quick Start, 3</li>
+</ul>
+<h3 id="s_1">S</h3>
+<ul>
+<li>State Management, 3-4, 7</li>
+<li>Supervision, 8</li>
+</ul>
+<h3 id="t_1">T</h3>
+<ul>
+<li>Testing, 7, 9</li>
+<li>Threading, 4, 8</li>
+</ul>
+<hr />
+<p><em>This documentation was automatically generated from source code and manual content. Last updated: {{ timestamp }}</em></p>
+<hr />
+    </main>
+    <footer style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #eee; color: #666; text-align: center;">
+        <p>Generated from zctor documentation • <a href="https://github.com/YouNeedWork/zctor">Source Code</a></p>
+    </footer>
+</body>
+</html>

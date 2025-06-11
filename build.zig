@@ -42,7 +42,7 @@ pub fn build(b: *std.Build) void {
     // Modules can depend on one another using the `std.Build.Module.addImport` function.
     // This is what allows Zig source code to use `@import("foo")` where 'foo' is not a
     // file path. In this case, we set up `exe_mod` to import `lib_mod`.
-    exe_mod.addImport("actor_lib", lib_mod);
+    exe_mod.addImport("zctor_lib", lib_mod);
 
     const xev = b.dependency("libxev", .{ .target = target, .optimize = optimize });
     exe_mod.addImport("xev", xev.module("xev"));
@@ -52,7 +52,7 @@ pub fn build(b: *std.Build) void {
     // for actually invoking the compiler.
     const lib = b.addLibrary(.{
         .linkage = .static,
-        .name = "actor",
+        .name = "zctor",
         .root_module = lib_mod,
     });
 
@@ -64,7 +64,7 @@ pub fn build(b: *std.Build) void {
     // This creates another `std.Build.Step.Compile`, but this one builds an executable
     // rather than a static library.
     const exe = b.addExecutable(.{
-        .name = "actor",
+        .name = "zctor",
         .root_module = exe_mod,
     });
 
@@ -132,7 +132,7 @@ pub fn build(b: *std.Build) void {
         "src",
         "docs",
     });
-    
+
     // Book generation step
     const book_cmd = b.addSystemCommand(&[_][]const u8{
         "python3",
@@ -141,13 +141,13 @@ pub fn build(b: *std.Build) void {
         "-o",
         "docs/zctor-complete-book.md",
     });
-    
+
     const docs_step = b.step("docs", "Generate API documentation");
     docs_step.dependOn(&docs_cmd.step);
-    
+
     const book_step = b.step("book", "Generate complete documentation book");
     book_step.dependOn(&book_cmd.step);
-    
+
     const all_docs_step = b.step("docs-all", "Generate all documentation");
     all_docs_step.dependOn(&docs_cmd.step);
     all_docs_step.dependOn(&book_cmd.step);

@@ -8,8 +8,8 @@ const ActorThread = @import("actor_thread.zig");
 allocator: std.mem.Allocator,
 actor_threads: [128]*ActorThread,
 wg: std.Thread.WaitGroup,
-threads: [128]std.Thread, // 修复: 存储实际的线程对象
-thread_count: usize, // 修复: 重命名为更清晰的名称
+threads: [128]std.Thread,
+thread_count: usize,
 thread_idx: usize,
 
 const Self = @This();

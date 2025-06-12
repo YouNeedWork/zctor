@@ -5,21 +5,12 @@
 //! - Multi-threaded execution
 //! - Asynchronous message passing
 //! - Built-in state management
-
-const std = @import("std");
-
 // Export the main actor framework components
 pub const Actor = @import("actor.zig").Actor;
 pub const ActorEngine = @import("actor_engine.zig");
 pub const ActorThread = @import("actor_thread.zig");
 pub const ActorInterface = @import("actor_interface.zig");
 pub const Context = @import("context.zig");
-
-// Export the example message type for reference
-pub const SimpleMessage = @import("simple_message.zig").SimpleMessage;
-
-// For testing
-const testing = std.testing;
 
 test "library imports" {
     // Ensure all modules can be imported
@@ -28,5 +19,4 @@ test "library imports" {
     _ = ActorThread;
     _ = ActorInterface;
     _ = Context;
-    _ = SimpleMessage;
 }

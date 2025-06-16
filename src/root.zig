@@ -11,6 +11,7 @@ pub const ActorEngine = @import("actor_engine.zig");
 pub const ActorThread = @import("actor_thread.zig");
 pub const ActorInterface = @import("actor_interface.zig");
 pub const Context = @import("context.zig");
+pub const Xev = @import("xev");
 
 test "library imports" {
     // Ensure all modules can be imported

@@ -8,10 +8,11 @@ const Actor = @import("actor.zig");
 loop: xev.Loop,
 ctx: *context,
 actors: std.StringArrayHashMap(ActorInterface),
+thread_id: u32,
 
 const Self = @This();
 
-pub fn init(allocator: std.mem.Allocator, actor_engine: *ActorEngine, thread_id: i32) !*Self {
+pub fn init(allocator: std.mem.Allocator, actor_engine: *ActorEngine, thread_id: u32) !*Self {
     const self = try allocator.create(Self);
     self.loop = try xev.Loop.init(.{});
     self.ctx = try context.init(allocator, &self.loop, actor_engine, thread_id);
@@ -27,6 +28,7 @@ pub fn registerActor(self: *Self, actor: anytype) !void {
 
 pub fn send(self: *Self, comptime T: type, msg_ptr: *T) !void {
     const name = comptime @typeName(Actor.Actor(T));
+
     if (self.actors.get(name)) |act| {
         act.handleRawMessage(msg_ptr);
     } else {
@@ -35,6 +37,7 @@ pub fn send(self: *Self, comptime T: type, msg_ptr: *T) !void {
 }
 
 pub fn publish(self: *Self, comptime T: type, msg_ptr: *anyopaque) void {
+    _ = Self;
     _ = T;
 
     for (self.actors.items) |act| {

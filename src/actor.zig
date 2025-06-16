@@ -16,6 +16,12 @@ pub fn Actor(comptime T: type) type {
 
         pub fn init(allocator: std.mem.Allocator, ctx: *context, handler: *const fn (*Self, T) ?void) !*Self {
             const self = try allocator.create(Self);
+
+            comptime {
+                if (@sizeOf(T) == 0)
+                    @compileError("LinearFifo not support size=0 type");
+            }
+
             self.* = Self{
                 .handler = handler,
                 .mailbox = std.fifo.LinearFifo(T, .Dynamic).init(allocator),
@@ -24,6 +30,7 @@ pub fn Actor(comptime T: type) type {
                 .completion = undefined,
                 .allocator = allocator,
             };
+
             return self;
         }
 

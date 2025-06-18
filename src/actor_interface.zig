@@ -1,5 +1,5 @@
 const std = @import("std");
-const context = @import("context.zig");
+const Context = @import("context.zig");
 const xev = @import("xev");
 
 ptr: *anyopaque,
@@ -11,10 +11,15 @@ pub const VTable = struct {
     run: *const fn (ptr: *anyopaque) void,
     deinit: *const fn (ptr: *anyopaque, allocator: std.mem.Allocator) void,
     handleRawMessage: *const fn (ptr: *anyopaque, msg_ptr: *anyopaque) void,
+    add_ctx: *const fn (ptr: *anyopaque, ctx: *Context) void,
 };
 
 pub fn run(self: Self) void {
     return self.vtable.run(self.ptr);
+}
+
+pub fn add_ctx(self: Self, ctx: *Context) void {
+    return self.vtable.add_ctx(self.ptr, ctx);
 }
 
 pub fn deinit(self: Self, allocator: std.mem.Allocator) void {
@@ -30,9 +35,13 @@ pub fn init(actor: anytype) Self {
 
     //TODO: check actor has the impl.
 
-    // 为类型 T 创建静态 vtable
     const vtable = comptime blk: {
-        //const alignment = @alignOf(T);
+        const add_ctxFn = struct {
+            fn function(ptr: *anyopaque, ctx: *Context) void {
+                const self: T = @ptrCast(@alignCast(ptr));
+                self.add_ctx(ctx);
+            }
+        }.function;
 
         const runFn = struct {
             fn function(ptr: *anyopaque) void {
@@ -61,6 +70,7 @@ pub fn init(actor: anytype) Self {
             .run = runFn,
             .deinit = deinitFn,
             .handleRawMessage = handleRawMessageFn,
+            .add_ctx = add_ctxFn,
         };
     };
 

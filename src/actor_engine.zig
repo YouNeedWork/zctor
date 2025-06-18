@@ -54,9 +54,10 @@ pub fn spawn(self: *Self, actor_thread: *ActorThread) !void {
         return error.TooManyThreads;
     }
 
-    self.actor_threads[self.thread_idx] = actor_thread;
+    try actor_thread.init_ctx(self, @bitCast(self.thread_idx));
     try actor_thread.run();
 
+    self.actor_threads[self.thread_idx] = actor_thread;
     const current_idx = self.thread_idx;
     self.thread_idx += 1;
 

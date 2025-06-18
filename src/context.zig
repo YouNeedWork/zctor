@@ -3,11 +3,11 @@ const std = @import("std");
 const ActorEngine = @import("actor_engine.zig");
 
 loop: *xev.Loop,
-thread_id: u32,
+thread_id: u64,
 engine: *ActorEngine,
 const Self = @This();
 
-pub fn init(allocator: std.mem.Allocator, loop: *xev.Loop, actor_engine: *ActorEngine, therad_id: u32) !*Self {
+pub fn init(allocator: std.mem.Allocator, loop: *xev.Loop, actor_engine: *ActorEngine, therad_id: u64) !*Self {
     const ctx = try allocator.create(Self);
     ctx.* = .{
         .loop = loop,

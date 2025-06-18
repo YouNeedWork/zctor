@@ -6,19 +6,23 @@ const ActorEngine = @import("actor_engine.zig");
 const Actor = @import("actor.zig");
 
 loop: xev.Loop,
-ctx: *context,
+ctx: ?*context,
 actors: std.StringArrayHashMap(ActorInterface),
-thread_id: u32,
 
 const Self = @This();
 
-pub fn init(allocator: std.mem.Allocator, actor_engine: *ActorEngine, thread_id: u32) !*Self {
+pub fn init(allocator: std.mem.Allocator) !*Self {
     const self = try allocator.create(Self);
+
     self.loop = try xev.Loop.init(.{});
-    self.ctx = try context.init(allocator, &self.loop, actor_engine, thread_id);
+    self.ctx = null;
     self.actors = std.StringArrayHashMap(ActorInterface).init(allocator);
 
     return self;
+}
+
+pub fn init_ctx(self: *Self, actor_engine: *ActorEngine, thread_id: u64) !void {
+    self.ctx = try context.init(actor_engine.allocator, &self.loop, actor_engine, thread_id);
 }
 
 pub fn registerActor(self: *Self, actor: anytype) !void {
@@ -52,8 +56,8 @@ pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
     }
 
     self.actors.deinit();
+    self.ctx.?.deinit(allocator);
 
-    self.ctx.deinit(allocator);
     self.loop.deinit();
     allocator.destroy(self);
 }
@@ -61,6 +65,7 @@ pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
 pub fn run(self: *Self) !void {
     var iter = self.actors.iterator();
     while (iter.next()) |entry| {
+        entry.value_ptr.add_ctx(self.ctx.?);
         entry.value_ptr.run();
     }
 }

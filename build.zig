@@ -63,4 +63,19 @@ pub fn build(b: *std.Build) void {
     const all_docs_step = b.step("docs-all", "Generate all documentation");
     all_docs_step.dependOn(&docs_cmd.step);
     all_docs_step.dependOn(&book_cmd.step);
+
+    // Add example executables
+    const call_example = b.addExecutable(.{
+        .name = "call_example",
+        .root_source_file = b.path("examples/call_example.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+    call_example.root_module.addImport("zctor", mod);
+    b.installArtifact(call_example);
+
+    // Run example step
+    const run_call_example = b.addRunArtifact(call_example);
+    const run_call_example_step = b.step("run-call", "Run the call example");
+    run_call_example_step.dependOn(&run_call_example.step);
 }

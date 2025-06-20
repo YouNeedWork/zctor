@@ -1,6 +1,5 @@
 const std = @import("std");
 const Context = @import("context.zig");
-const xev = @import("xev");
 
 ptr: *anyopaque,
 vtable: *const VTable,
@@ -10,7 +9,8 @@ const Self = @This();
 pub const VTable = struct {
     run: *const fn (ptr: *anyopaque) void,
     deinit: *const fn (ptr: *anyopaque, allocator: std.mem.Allocator) void,
-    handleRawMessage: *const fn (ptr: *anyopaque, msg_ptr: *anyopaque) void,
+    send: *const fn (ptr: *anyopaque, msg_ptr: *anyopaque) void,
+    call: *const fn (ptr: *anyopaque, msg_ptr: *anyopaque) ?*anyopaque,
     add_ctx: *const fn (ptr: *anyopaque, ctx: *Context) void,
 };
 
@@ -26,14 +26,18 @@ pub fn deinit(self: Self, allocator: std.mem.Allocator) void {
     return self.vtable.deinit(self.ptr, allocator);
 }
 
-pub fn handleRawMessage(self: Self, msg: *anyopaque) void {
-    return self.vtable.handleRawMessage(self.ptr, msg);
+pub fn call(self: Self, msg: *anyopaque) ?*anyopaque {
+    return self.vtable.call(self.ptr, msg);
+}
+
+pub fn send(self: Self, msg: *anyopaque) void {
+    return self.vtable.send(self.ptr, msg);
 }
 
 pub fn init(actor: anytype) Self {
     const T = @TypeOf(actor);
 
-    //TODO: check actor has the impl.
+    // Note: Actor interface validation is done at runtime
 
     const vtable = comptime blk: {
         const add_ctxFn = struct {
@@ -57,19 +61,31 @@ pub fn init(actor: anytype) Self {
             }
         }.function;
 
-        const handleRawMessageFn = struct {
+        const sendFn = struct {
             fn function(ptr: *anyopaque, msg_ptr: *anyopaque) void {
                 const self: T = @ptrCast(@alignCast(ptr));
-                self.handleRawMessage(msg_ptr) catch {
-                    std.debug.print("failed to process message", .{});
+                self.send(msg_ptr) catch |err| {
+                    std.debug.print("Failed to process message: {}\n", .{err});
                 };
+            }
+        }.function;
+
+        const callFn = struct {
+            fn function(ptr: *anyopaque, msg_ptr: *anyopaque) ?*anyopaque {
+                const self: T = @ptrCast(@alignCast(ptr));
+                const res = self.call(msg_ptr) catch |err| {
+                    std.debug.print("failed to process message: {}\n", .{err});
+                    return null;
+                };
+                return res;
             }
         }.function;
 
         break :blk &VTable{
             .run = runFn,
             .deinit = deinitFn,
-            .handleRawMessage = handleRawMessageFn,
+            .send = sendFn,
+            .call = callFn,
             .add_ctx = add_ctxFn,
         };
     };

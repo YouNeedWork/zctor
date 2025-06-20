@@ -3,7 +3,7 @@ const testing = std.testing;
 
 /// A one-shot channel that can send exactly one value from sender to receiver
 /// Uses atomic operations and spinning for synchronization
-pub fn OneShotChannel(comptime T: type) type {
+pub fn OneShot(comptime T: type) type {
     return struct {
         const Self = @This();
 
@@ -118,8 +118,8 @@ pub fn OneShotChannel(comptime T: type) type {
 
 /// Convenience wrapper that provides sender and receiver handles
 pub fn oneShotChannel(comptime T: type) struct { sender: Sender(T), receiver: Receiver(T) } {
-    const channel = std.heap.page_allocator.create(OneShotChannel(T)) catch unreachable;
-    channel.* = OneShotChannel(T).init();
+    const channel = std.heap.page_allocator.create(OneShot(T)) catch unreachable;
+    channel.* = OneShot(T).init();
 
     return .{
         .sender = Sender(T){ .channel = channel },
@@ -131,7 +131,7 @@ pub fn oneShotChannel(comptime T: type) struct { sender: Sender(T), receiver: Re
 pub fn Sender(comptime T: type) type {
     return struct {
         const Self = @This();
-        channel: *OneShotChannel(T),
+        channel: *OneShot(T),
 
         pub fn send(self: Self, value: T) bool {
             return self.channel.send(value);
@@ -147,7 +147,7 @@ pub fn Sender(comptime T: type) type {
 pub fn Receiver(comptime T: type) type {
     return struct {
         const Self = @This();
-        channel: *OneShotChannel(T),
+        channel: *OneShot(T),
 
         pub fn receive(self: Self) ?T {
             return self.channel.receive();
@@ -173,7 +173,7 @@ pub fn Receiver(comptime T: type) type {
 
 // Tests
 test "OneShotChannel basic send and receive" {
-    var channel = OneShotChannel(i32).init();
+    var channel = OneShot(i32).init();
 
     // Should be empty initially
     try testing.expect(channel.isEmpty());
@@ -201,7 +201,7 @@ test "OneShotChannel basic send and receive" {
 }
 
 test "OneShotChannel try receive" {
-    var channel = OneShotChannel([]const u8).init();
+    var channel = OneShot([]const u8).init();
 
     // Try receive on empty channel
     try testing.expectEqual(@as(?[]const u8, null), channel.tryReceive());

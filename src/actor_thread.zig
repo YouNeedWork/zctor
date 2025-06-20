@@ -30,13 +30,13 @@ pub fn registerActor(self: *Self, actor: anytype) !void {
     try self.actors.put(name, ActorInterface.init(actor));
 }
 
-pub fn send(self: *Self, comptime T: type, msg_ptr: *T) !void {
+pub fn send(self: *Self, comptime T: type, msg_ptr: *T) void {
     const name = comptime @typeName(Actor.Actor(T));
 
     if (self.actors.get(name)) |act| {
-        act.handleRawMessage(msg_ptr);
+        return act.send(msg_ptr);
     } else {
-        return error.ActorNotFound;
+        @panic("Actor not found");
     }
 }
 
@@ -72,4 +72,14 @@ pub fn run(self: *Self) !void {
 
 pub fn start_loop(self: *Self) !void {
     try self.loop.run(.until_done);
+}
+
+pub fn call(self: *Self, comptime T: type, msg_ptr: *T) ?*anyopaque {
+    const name = comptime @typeName(Actor.Actor(T));
+
+    if (self.actors.get(name)) |act| {
+        return act.call(msg_ptr);
+    } else {
+        return null;
+    }
 }

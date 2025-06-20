@@ -7,11 +7,11 @@ thread_id: u64,
 engine: *ActorEngine,
 const Self = @This();
 
-pub fn init(allocator: std.mem.Allocator, loop: *xev.Loop, actor_engine: *ActorEngine, therad_id: u64) !*Self {
+pub fn init(allocator: std.mem.Allocator, loop: *xev.Loop, actor_engine: *ActorEngine, thread_id: u64) !*Self {
     const ctx = try allocator.create(Self);
     ctx.* = .{
         .loop = loop,
-        .thread_id = therad_id,
+        .thread_id = thread_id,
         .engine = actor_engine,
     };
 

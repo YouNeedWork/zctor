@@ -76,7 +76,17 @@ fn thread_run(self: *Self, thread_idx: usize) void {
     };
 }
 
-pub fn send(self: *Self, comptime T: anytype, msg_ptr: *anyopaque) !void {
+pub fn send(self: *Self, comptime T: anytype, msg_ptr: *anyopaque) void {
     const typed_ptr: *T = @ptrCast(@alignCast(msg_ptr));
-    try self.actor_threads[0].send(T, typed_ptr);
+    return self.actor_threads[0].send(T, typed_ptr);
+}
+
+pub fn send_to_actor(_: *Self, actor: *Actor, comptime T: anytype, msg_ptr: *anyopaque) void {
+    const typed_ptr: *T = @ptrCast(@alignCast(msg_ptr));
+    return actor.send(T, typed_ptr);
+}
+
+pub fn call(self: *Self, comptime T: anytype, msg_ptr: *anyopaque) ?*anyopaque {
+    const typed_ptr: *T = @ptrCast(@alignCast(msg_ptr));
+    return self.actor_threads[0].call(T, typed_ptr);
 }

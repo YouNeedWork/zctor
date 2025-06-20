@@ -1,20 +1,38 @@
 const std = @import("std");
 const Context = @import("context.zig");
 const xev = @import("xev");
+const OneShot = @import("one_shot.zig").OneShot;
 
+/// Generic Actor implementation that processes messages of type T
+/// Supports both fire-and-forget (send) and request-response (call) patterns
 pub fn Actor(comptime T: type) type {
     return struct {
         const Self = @This();
 
-        handler: *const fn (*Self, T) ?void, // Changed return type to ?T
-        mailbox: std.fifo.LinearFifo(T, .Dynamic),
+        // Define message types
+        const MessageType = enum { send, call };
+
+        const CallData = struct {
+            msg: T,
+            response_channel: *OneShot(*anyopaque),
+        };
+
+        const ActorMessage = union(MessageType) {
+            send: T,
+            call: CallData,
+        };
+
+        handler: *const fn (*Self, T) ?*anyopaque, // Handler can optionally return a value
+        mailbox: std.fifo.LinearFifo(ActorMessage, .Dynamic),
         ctx: ?*Context,
         event: xev.Async,
         completion: xev.Completion,
         allocator: std.mem.Allocator,
-        current_state: ?*anyopaque = null, // Store current state
+        current_state: ?*anyopaque = null,
 
-        pub fn init(allocator: std.mem.Allocator, handler: *const fn (*Self, T) ?void) !*Self {
+        /// Initialize a new actor with the given allocator and message handler
+        /// The handler function should return a value for call operations, or null for send operations
+        pub fn init(allocator: std.mem.Allocator, handler: *const fn (*Self, T) ?*anyopaque) !*Self {
             const self = try allocator.create(Self);
 
             comptime {
@@ -24,7 +42,7 @@ pub fn Actor(comptime T: type) type {
 
             self.* = Self{
                 .handler = handler,
-                .mailbox = std.fifo.LinearFifo(T, .Dynamic).init(allocator),
+                .mailbox = std.fifo.LinearFifo(ActorMessage, .Dynamic).init(allocator),
                 .ctx = null,
                 .event = try xev.Async.init(),
                 .completion = undefined,
@@ -44,10 +62,26 @@ pub fn Actor(comptime T: type) type {
             _ = loop;
             _ = completion;
 
-            const self = userdata.?; // Use the non-nullable version
-            while (self.mailbox.readItem()) |msg| {
-                // Handle the message and get updated state
-                _ = self.handler(self, msg);
+            const self = userdata.?;
+            while (self.mailbox.readItem()) |actor_msg| {
+                switch (actor_msg) {
+                    .send => |msg| {
+                        // Regular send - ignore return value
+                        _ = self.handler(self, msg);
+                    },
+                    .call => |call_data| {
+                        // Call - send response back through one-shot
+                        const response = self.handler(self, call_data.msg);
+                        if (response) |resp| {
+                            if (!call_data.response_channel.send(resp)) {
+                                std.debug.print("Warning: Failed to send response through channel\n", .{});
+                            }
+                        } else {
+                            std.debug.print("Error: Handler returned null for call operation\n", .{});
+                            @panic("Handler returned null for call operation");
+                        }
+                    },
+                }
             }
             return .rearm;
         }
@@ -60,14 +94,44 @@ pub fn Actor(comptime T: type) type {
             self.event.wait(self.ctx.?.loop, &self.completion, Self, self, Self.actorCallback);
         }
 
-        pub fn handleRawMessage(self: *Self, msg_ptr: *anyopaque) !void {
+        /// Send a fire-and-forget message to the actor
+        /// The message will be processed asynchronously without waiting for a response
+        pub fn send(self: *Self, msg_ptr: *anyopaque) !void {
             const typed_msg = @as(*T, @ptrCast(@alignCast(msg_ptr)));
-            return self.sender(typed_msg.*);
+            return self.actor_send(typed_msg.*);
         }
 
-        pub fn sender(self: *Self, msg: T) !void {
-            try self.mailbox.writeItem(msg);
+        fn actor_send(self: *Self, msg: T) !void {
+            const actor_msg = ActorMessage{ .send = msg };
+            try self.mailbox.writeItem(actor_msg);
             try self.event.notify();
+        }
+
+        /// Send a request-response message to the actor and wait for the result
+        /// Returns the response from the actor's handler function
+        pub fn call(self: *Self, msg_ptr: *anyopaque) !*anyopaque {
+            const typed_msg = @as(*T, @ptrCast(@alignCast(msg_ptr)));
+            return self.actor_call(typed_msg.*);
+        }
+
+        fn actor_call(self: *Self, msg: T) !*anyopaque {
+            // Create a one-shot channel for the response
+            var response_channel = OneShot(*anyopaque).init();
+
+            // Create call message using the named CallData type
+            const call_data = CallData{
+                .msg = msg,
+                .response_channel = &response_channel,
+            };
+
+            const actor_msg = ActorMessage{ .call = call_data };
+
+            // Send the message
+            try self.mailbox.writeItem(actor_msg);
+            try self.event.notify();
+
+            // Wait for and return the response
+            return response_channel.receive() orelse error.NoResponse;
         }
 
         pub fn add_ctx(self: *Self, ctx: *Context) void {
@@ -97,10 +161,6 @@ pub fn Actor(comptime T: type) type {
 
         pub fn getAllocator(self: *Self) std.mem.Allocator {
             return self.allocator;
-        }
-
-        pub fn send(self: *Self, comptime ST: type, msg_ptr: *anyopaque) !void {
-            return self.ctx.?.send(ST, msg_ptr);
         }
     };
 }

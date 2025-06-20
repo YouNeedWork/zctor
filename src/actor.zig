@@ -3,8 +3,6 @@ const Context = @import("context.zig");
 const xev = @import("xev");
 const OneShot = @import("one_shot.zig").OneShot;
 
-/// Generic Actor implementation that processes messages of type T
-/// Supports both fire-and-forget (send) and request-response (call) patterns
 pub fn Actor(comptime T: type) type {
     return struct {
         const Self = @This();
@@ -30,8 +28,6 @@ pub fn Actor(comptime T: type) type {
         allocator: std.mem.Allocator,
         current_state: ?*anyopaque = null,
 
-        /// Initialize a new actor with the given allocator and message handler
-        /// The handler function should return a value for call operations, or null for send operations
         pub fn init(allocator: std.mem.Allocator, handler: *const fn (*Self, T) ?*anyopaque) !*Self {
             const self = try allocator.create(Self);
 
@@ -94,8 +90,6 @@ pub fn Actor(comptime T: type) type {
             self.event.wait(self.ctx.?.loop, &self.completion, Self, self, Self.actorCallback);
         }
 
-        /// Send a fire-and-forget message to the actor
-        /// The message will be processed asynchronously without waiting for a response
         pub fn send(self: *Self, msg_ptr: *anyopaque) !void {
             const typed_msg = @as(*T, @ptrCast(@alignCast(msg_ptr)));
             return self.actor_send(typed_msg.*);
@@ -107,8 +101,6 @@ pub fn Actor(comptime T: type) type {
             try self.event.notify();
         }
 
-        /// Send a request-response message to the actor and wait for the result
-        /// Returns the response from the actor's handler function
         pub fn call(self: *Self, msg_ptr: *anyopaque) !*anyopaque {
             const typed_msg = @as(*T, @ptrCast(@alignCast(msg_ptr)));
             return self.actor_call(typed_msg.*);

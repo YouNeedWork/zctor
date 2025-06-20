@@ -47,7 +47,7 @@ pub fn main() !void {
     var add_message = CalculatorMessage{ .Add = .{ .a = 5, .b = 3 } };
 
     // Call the actor and wait for the response
-    const response_ptr = engine.call(CalculatorMessage, &add_message);
+    const response_ptr = try engine.call(CalculatorMessage, &add_message);
     if (response_ptr) |ptr| {
         // Cast the response back to the expected type (i32)
         const result_ptr = @as(*i32, @ptrCast(@alignCast(ptr)));
